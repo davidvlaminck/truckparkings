@@ -1,18 +1,10 @@
-from generated_classes import D2LogicalModel
-
-from lxml import etree
-
 import xmlschema
 
 
 # https://stackoverflow.com/questions/299588/validating-with-an-xml-schema-in-python
 if __name__ == '__main__':
-    dd = D2LogicalModel()
-
     try:
         xmlschema.validate("UnitTests/datex2truckparkings.xml", "DATEXIISchema_2_2_3.xsd")
         print('valid XML')
     except Exception as ex:
         print(ex)
-
-# lxml
