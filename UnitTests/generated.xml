@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<D2LogicalModel xmlns:xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://datex2.eu/schema/2/2_3" modelBaseVersion="2"><exchange><supplierIdentification><country>be</country><nationalIdentifier>Vlaamse Overheid</nationalIdentifier></supplierIdentification></exchange><payloadPublication lang="DUTCH" xmlns:xsi:type="GenericPublication" /></D2LogicalModel>
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2"><exchange><supplierIdentification><country>be</country><nationalIdentifier>Vlaamse Overheid</nationalIdentifier></supplierIdentification></exchange></d2LogicalModel>

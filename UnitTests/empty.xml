@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<d2LogicalModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                modelBaseVersion="2" xmlns="http://datex2.eu/schema/2/2_0">
+    <exchange>
+        <supplierIdentification>
+            <country>be</country>
+            <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+        </supplierIdentification>
+    </exchange>
+</d2LogicalModel>
