@@ -1,9 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2">
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                modelBaseVersion="2">
     <exchange>
         <supplierIdentification>
             <country>be</country>
             <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
         </supplierIdentification>
     </exchange>
+    <payloadPublication lang="DUTCH" xsi:type="GenericPublication"/>
 </d2LogicalModel>

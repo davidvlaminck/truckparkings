@@ -67,6 +67,7 @@ class GeneratedClass(abc.ABC):
 
     def __init__(self):
         self._name = None
+        self._attributes = None
 
 
 class BaseGeneratedClass(GeneratedClass):
@@ -75,7 +76,10 @@ class BaseGeneratedClass(GeneratedClass):
         self.content = content
 
     def to_element(self, parent: ET.Element):
-        el = ET.SubElement(parent, self._name)
+        if self._attributes is None:
+            el = ET.SubElement(parent, self._name)
+        else:
+            el = ET.SubElement(parent, self._name, attrib=self._attributes)
         el.text = self.content
 
 
@@ -85,7 +89,10 @@ class GeneratedClassWithChildren(GeneratedClass):
         self._children = children
 
     def to_element(self, parent: ET.Element):
-        el = ET.SubElement(parent, self._name)
+        if self._attributes is None:
+            el = ET.SubElement(parent, self._name)
+        else:
+            el = ET.SubElement(parent, self._name, attrib=self._attributes)
 
         for child in (c for c in self._children if c is not None):
             child.to_element(parent=el)
@@ -126,11 +133,23 @@ class Exchange(GeneratedClassWithChildren):
         self._name = 'exchange'
 
 
+class PayloadPublication(GeneratedClassWithChildren):
+    """PayloadPublication -- A payload publication of traffic related information or associated management information created at a specific point in time that can be exchanged via a DATEX II interface.
+    lang -- The default language used throughout the payload publication.
+    publicationTime -- Date/time at which the payload publication was created."""
+
+    def __init__(self, publicationTime = None, publicationCreator=None, genericPublicationName=None,
+                 payloadPublicationExtension=None, genericPublicationType=None, lang:str=None):
+        super().__init__((publicationTime, publicationCreator, genericPublicationName, payloadPublicationExtension))
+        self._name = 'payloadPublication'
+        self._attributes = {'lang': lang, '{http://www.w3.org/2001/XMLSchema-instance}type': "GenericPublication"}
+
+
 class D2LogicalModel:
     """D2LogicalModel -- The DATEX II logical model comprising exchange, content payload and management sub-models."""
 
     def __init__(self, exchange: Exchange = None, payloadPublication=None):
-        self._children = {exchange, payloadPublication}
+        self._children = (exchange, payloadPublication)
         self._namespaces = {
             '': 'http://datex2.eu/schema/2/2_0',
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
