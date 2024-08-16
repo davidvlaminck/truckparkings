@@ -21,7 +21,7 @@ def convert_dict_to_el_tree(dict: dict) -> ET.ElementTree:
     d2_root = D2LogicalModel(
         exchange=Exchange(
             supplierIdentification=InternationalIdentifier(
-                country=Country(CountryEnum.BE), nationalIdentifier=NationalIdentifier("Vlaamse Overheid"))))
+                country=Country('be'), nationalIdentifier=NationalIdentifier("Vlaamse Overheid"))))
     return d2_root.to_tree()
 
     XSI = 'http://www.w3.org/2001/XMLSchema-instance'

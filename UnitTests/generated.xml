@@ -1,2 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2"><exchange><supplierIdentification><country>be</country><nationalIdentifier>Vlaamse Overheid</nationalIdentifier></supplierIdentification></exchange></d2LogicalModel>
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2">
+    <exchange>
+        <supplierIdentification>
+            <country>be</country>
+            <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+        </supplierIdentification>
+    </exchange>
+</d2LogicalModel>
