@@ -7,5 +7,9 @@
             <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
         </supplierIdentification>
     </exchange>
-    <payloadPublication lang="DUTCH" xsi:type="GenericPublication"/>
+    2024-08-19T23:57:59.155722+02:00
+    <publicationCreator>
+        <country>be</country>
+        <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+    </publicationCreator>
 </d2LogicalModel>

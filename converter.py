@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier, CountryEnum, Country, \
-    NationalIdentifier, PayloadPublication
+    NationalIdentifier, PayloadPublication, PublicationCreator
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -22,7 +22,10 @@ def convert_dict_to_el_tree(dict: dict) -> ET.ElementTree:
         exchange=Exchange(
             supplierIdentification=InternationalIdentifier(
                 country=Country('be'), nationalIdentifier=NationalIdentifier("Vlaamse Overheid"))),
-        payloadPublication=PayloadPublication(lang='DUTCH', genericPublicationType='GenericPublication'))
+        payloadPublication=PayloadPublication(
+            publicationCreator=PublicationCreator(InternationalIdentifier(
+                country=Country('be'), nationalIdentifier=NationalIdentifier("Vlaamse Overheid"))),
+            lang='DUTCH', genericPublicationType='GenericPublication'))
     return d2_root.to_tree()
 
     XSI = 'http://www.w3.org/2001/XMLSchema-instance'

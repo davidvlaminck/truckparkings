@@ -1,4 +1,5 @@
 import abc
+import datetime
 from enum import Enum
 import xml.etree.ElementTree as ET
 
@@ -120,17 +121,33 @@ class InternationalIdentifier(GeneratedClassWithChildren):
     nationalIdentifier -- Identifier or name unique within the specified country.
     """
     def __init__(self, country: Country, nationalIdentifier: NationalIdentifier,
-                 internationalIdentifierExtension=None):
+                 internationalIdentifierExtension=None, name: str = None):
         super().__init__((country, nationalIdentifier, internationalIdentifierExtension))
-        self._name = 'supplierIdentification'
+        self._name = name
 
 
 class Exchange(GeneratedClassWithChildren):
     """Exchange -- Details associated with the management of the exchange between the supplier and the client."""
 
     def __init__(self, supplierIdentification: InternationalIdentifier = None, exchangeExtension=None):
+        supplierIdentification._name = 'supplierIdentification'
         super().__init__((supplierIdentification, exchangeExtension))
         self._name = 'exchange'
+
+
+class PublicationCreator(GeneratedClassWithChildren):
+    """PublicationCreator -- Details of the creator of the DATEX II publication.
+    """
+    def __init__(self, publicationCreator: InternationalIdentifier = None):
+        super().__init__((publicationCreator,))
+        self._name = 'publicationCreator'
+
+
+class PublicationTime(BaseGeneratedClass):
+    def __init__(self, publicationTime: str = None):
+        super().__init__("")
+        self._name = 'publicationTime'
+        self.content = datetime.datetime.now().astimezone().isoformat()
 
 
 class PayloadPublication(GeneratedClassWithChildren):
@@ -138,9 +155,10 @@ class PayloadPublication(GeneratedClassWithChildren):
     lang -- The default language used throughout the payload publication.
     publicationTime -- Date/time at which the payload publication was created."""
 
-    def __init__(self, publicationTime = None, publicationCreator=None, genericPublicationName=None,
+    def __init__(self, publicationTime: PublicationTime = None, publicationCreator=None, genericPublicationName=None,
                  payloadPublicationExtension=None, genericPublicationType=None, lang:str=None):
-        super().__init__((publicationTime, publicationCreator, genericPublicationName, payloadPublicationExtension))
+        publicationCreator._name = 'publicationCreator'
+        super().__init__((PublicationTime(), publicationCreator, genericPublicationName, payloadPublicationExtension))
         self._name = 'payloadPublication'
         self._attributes = {'lang': lang, '{http://www.w3.org/2001/XMLSchema-instance}type': "GenericPublication"}
 
