@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 
 class CountryEnum(str, Enum):
     """CountryEnum -- List of countries.
-    
+
     """
     AT = 'at'  # Austria
     BE = 'be'  # Belgium
@@ -72,7 +72,7 @@ class GeneratedClass(abc.ABC):
 
 
 class BaseGeneratedClass(GeneratedClass):
-    def __init__(self, content: str):
+    def __init__(self, content: object):
         super().__init__()
         self.content = content
 
@@ -101,6 +101,7 @@ class GeneratedClassWithChildren(GeneratedClass):
 
 class NationalIdentifier(BaseGeneratedClass):
     """NationalIdentifier -- An identifier/name unique within the specified country."""
+
     def __init__(self, content: str):
         super().__init__(content)
         self._name = 'nationalIdentifier'
@@ -120,6 +121,7 @@ class InternationalIdentifier(GeneratedClassWithChildren):
     country -- ISO 3166-1 two character country code.
     nationalIdentifier -- Identifier or name unique within the specified country.
     """
+
     def __init__(self, country: Country, nationalIdentifier: NationalIdentifier,
                  internationalIdentifierExtension=None, name: str = None):
         super().__init__((country, nationalIdentifier, internationalIdentifierExtension))
@@ -138,16 +140,236 @@ class Exchange(GeneratedClassWithChildren):
 class PublicationCreator(GeneratedClassWithChildren):
     """PublicationCreator -- Details of the creator of the DATEX II publication.
     """
+
     def __init__(self, publicationCreator: InternationalIdentifier = None):
         super().__init__((publicationCreator,))
         self._name = 'publicationCreator'
 
 
+class GenericPublicationName(BaseGeneratedClass):
+    """GenericPublicationName -- The name of the generic publication."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'genericPublicationName'
+
+
+class ParkingRecordVersionTime(BaseGeneratedClass):
+    """Date/time that this version of the parking record was defined."""
+
+    def __init__(self):
+        super().__init__(datetime.datetime.now().astimezone().isoformat())
+        self._name = 'parkingRecordVersionTime'
+
+
+class ParkingTableVersionTime(BaseGeneratedClass):
+    """The date/time that this version of the parking table was defined by the supplier. The identity and version
+    of the table are defined by the class stereotype implementation."""
+
+    def __init__(self):
+        super().__init__(datetime.datetime.now().astimezone().isoformat())
+        self._name = 'parkingTableVersionTime'
+
+
 class PublicationTime(BaseGeneratedClass):
-    def __init__(self, publicationTime: str = None):
+    def __init__(self):
         super().__init__("")
         self._name = 'publicationTime'
         self.content = datetime.datetime.now().astimezone().isoformat()
+
+
+class MultilingualStringValue(BaseGeneratedClass):
+    """MultilingualStringValue -- A string of characters expressed in a single language.
+    lang -- The language of the text.
+    value -- The text string.
+    """
+
+    def __init__(self, lang: str, value: str):
+        super().__init__(value)
+        self._name = 'value'
+        self._attributes = {'lang': lang}
+
+
+class MultilingualString(GeneratedClassWithChildren):
+    """MultilingualString -- A string of characters which may be expressed in multiple languages.
+    values -- The values of the string in different languages.
+    """
+
+    def __init__(self, values: [MultilingualStringValue] = None):
+        super().__init__(values)
+        self._name = 'values'
+
+
+class Latitude(BaseGeneratedClass):
+    """Latitude -- The latitude of a point in space."""
+
+    def __init__(self, content: float):
+        if content < -90 or content > 90:
+            raise ValueError(f'Invalid number for latitude: {content}')
+        super().__init__(str(content))
+        self._name = 'latitude'
+
+
+class Longitude(BaseGeneratedClass):
+    """Longitude -- The longitude of a point in space."""
+
+    def __init__(self, content: float):
+        if content < -180 or content > 180:
+            raise ValueError(f'Invalid number for longitude: {content}')
+        super().__init__(str(content))
+        self._name = 'longitude'
+
+
+class PointCoordinates(GeneratedClassWithChildren):
+    """PointCoordinates -- The coordinates of a point in space.
+    latitude -- The latitude of the point.
+    longitude -- The longitude of the point.
+    """
+
+    def __init__(self, latitude: Latitude, longitude: Longitude):
+        super().__init__((latitude, longitude))
+        self._name = 'pointCoordinates'
+
+
+class PointByCoordinates(GeneratedClassWithChildren):
+    """PointByCoordinates -- A point defined by coordinates.
+    pointCoordinates -- The coordinates of the point."""
+
+    def __init__(self, pointCoordinates: PointCoordinates):
+        super().__init__((pointCoordinates,))
+        self._name = 'pointByCoordinates'
+
+
+class AssignedParkingAmongOthers(BaseGeneratedClass):
+    """Assignments for parking. Other assignments are allowed as well, i.e. the parking spaces are convenient
+    for this kind of assignment."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'assignedParkingAmongOthers'
+
+
+class OnlyAssignedParking(BaseGeneratedClass):
+    """Parking is only allowed for the assignment given in this class, i.e. other assignments are not allowed.
+    By using this role, it is not allowed to use 'assignedParkingAmongOthers' and 'prohibitedParking'
+    for the same type of attributes."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'onlyAssignedParking'
+
+
+class ParkingLocation(GeneratedClassWithChildren):
+    """ParkingLocation -- The location of a parking site or group of parking sites.
+    pointByCoordinates -- A point defined by coordinates.
+    """
+
+    def __init__(self, pointByCoordinates: PointByCoordinates):
+        super().__init__((pointByCoordinates,))
+        self._name = 'parkingLocation'
+        self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': 'Point'}
+
+class ContactOrganisationName(GeneratedClassWithChildren):
+    """Name of the organisation or service. Do not use this attribute in combination with role "parkingSiteAddress"."""
+
+    def __init__(self, multilingualString: MultilingualString):
+        super().__init__((multilingualString,))
+        self._name = 'contactOrganisationName'
+
+
+class ContactDetailsEMail(BaseGeneratedClass):
+    """E-mail address of the operator."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'contactDetailsEMail'
+
+
+class ContactDetailsTelephoneNumber(BaseGeneratedClass):
+    """Telephone number of the operator."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'contactDetailsTelephoneNumber'
+
+
+class Operator(GeneratedClassWithChildren):
+    """Contact details of the operator of the parking facility.
+    contactDetailsEMail -- E-mail address of the operator.
+    contactDetailsTelephoneNumber -- Telephone number of the operator.
+    contactOrganisationName -- Name of the organisation or service.
+    Do not use this attribute in combination with role "parkingSiteAddress".
+    id -- Unique identifier of the operator.
+    version -- Version of the operator."""
+
+    def __init__(self, id: str, version: str, contactOrganisationName: ContactOrganisationName,
+                 contactDetailsEMail: ContactDetailsEMail, contactDetailsTelephoneNumber: ContactDetailsTelephoneNumber):
+        super().__init__((contactOrganisationName, contactDetailsTelephoneNumber, contactDetailsEMail))
+        self._name = 'operator'
+        self._attributes = {'id': id, 'version': version,
+                            '{http://www.w3.org/2001/XMLSchema-instance}type': 'ContactDetails'}
+
+
+class ParkingName(GeneratedClassWithChildren):
+    """ParkingName -- The name of a parking site or group of parking sites.
+    name -- The name of the parking site or group of parking sites.
+    """
+
+    def __init__(self, multilingualString: MultilingualString):
+        super().__init__((multilingualString,))
+        self._name = 'parkingName'
+
+
+class ParkingNumberOfSpaces(BaseGeneratedClass):
+    """Number of parking spaces (attribute is used for a parking record as well as for a group of parking spaces)."""
+
+    def __init__(self, parkingNumberOfSpaces: int):
+        if parkingNumberOfSpaces < 0:
+            raise ValueError(f'Invalid number for number of parking spaces: {parkingNumberOfSpaces}')
+        super().__init__(str(parkingNumberOfSpaces))
+        self._name = 'parkingNumberOfSpaces'
+
+
+class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
+    """A container for static parking information. Must be specialised as a parking site or as a group of parking sites."""
+
+    def __init__(self, type_: str, id: str, version: str, parkingName: ParkingName=None,
+                 parkingRecordVersionTime: ParkingRecordVersionTime=None, parkingLocation: ParkingLocation=None,
+                 parkingNumberOfSpaces: ParkingNumberOfSpaces=None, operator: Operator=None,
+                 onlyAssignedParking: OnlyAssignedParking=None,
+                 assignedParkingAmongOthers: AssignedParkingAmongOthers=None):
+        super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation))
+        self._name = 'parkingRecord'
+        self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
+
+
+class ParkingTable(GeneratedClassWithChildren):
+    """A collection of parking records, which can be parking sites or groups of parking sites."""
+
+    def __init__(self, id: str, version: str, parkingTableVersionTime: ParkingTableVersionTime,
+                 parkingRecords:[ParkingRecord]=()):
+        super().__init__((parkingTableVersionTime, *parkingRecords))
+        self._name = 'parkingTable'
+        self._attributes = {'id': id, 'version': version}
+
+
+class ParkingTablePublication(GeneratedClassWithChildren):
+    """ParkingTablePublication -- A publication containing a parking table.
+    parkingTable -- A collection of parking records, which can be parking sites or groups of parking sites.
+    """
+
+    def __init__(self, parkingTable: ParkingTable = None):
+        super().__init__((parkingTable,))
+        self._name = 'parkingTablePublication'
+
+
+class GenericPublicationExtension(GeneratedClassWithChildren):
+    """GenericPublicationExtension -- Extension class for additional elements that are not part
+    of the DATEX II standard."""
+
+    def __init__(self, parkingTablePublication: ParkingTablePublication=None):
+        super().__init__((parkingTablePublication,))
+        self._name = 'genericPublicationExtension'
 
 
 class PayloadPublication(GeneratedClassWithChildren):
@@ -155,10 +377,12 @@ class PayloadPublication(GeneratedClassWithChildren):
     lang -- The default language used throughout the payload publication.
     publicationTime -- Date/time at which the payload publication was created."""
 
-    def __init__(self, publicationTime: PublicationTime = None, publicationCreator=None, genericPublicationName=None,
-                 payloadPublicationExtension=None, genericPublicationType=None, lang:str=None):
+    def __init__(self, publicationCreator=None,
+                 genericPublicationName: GenericPublicationName = None,
+                 genericPublicationExtension: GenericPublicationExtension = None, genericPublicationType=None,
+                 lang: str = None):
         publicationCreator._name = 'publicationCreator'
-        super().__init__((PublicationTime(), publicationCreator, genericPublicationName, payloadPublicationExtension))
+        super().__init__((PublicationTime(), publicationCreator, genericPublicationName, genericPublicationExtension))
         self._name = 'payloadPublication'
         self._attributes = {'lang': lang, '{http://www.w3.org/2001/XMLSchema-instance}type': "GenericPublication"}
 

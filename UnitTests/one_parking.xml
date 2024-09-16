@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='utf-8'?>
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                modelBaseVersion="2">
+    <exchange>
+        <supplierIdentification>
+            <country>be</country>
+            <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+        </supplierIdentification>
+    </exchange>
+    <payloadPublication lang="DUTCH" xsi:type="GenericPublication">
+        <publicationTime>2024-01-01T00:00:00+01:00</publicationTime>
+        <publicationCreator>
+            <country>be</country>
+            <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+        </publicationCreator>
+        <genericPublicationName>ParkingTablePublication</genericPublicationName>
+        <genericPublicationExtension>
+            <parkingTablePublication>
+                <parkingTable id="1" version="3">
+                    <parkingTableVersionTime>2024-01-01T00:00:00+01:00</parkingTableVersionTime>
+                    <parkingRecord xsi:type="InterUrbanParkingSite" id="c00134eb-dbd1-4b04-9b5d-a0834cc9193e"
+                                   version="3">
+                        <parkingName>
+                            <values>
+                                <value lang="DUTCH">E40 Heverlee Luik - Brussel</value>
+                            </values>
+                        </parkingName>
+                        <parkingRecordVersionTime>2024-01-01T00:00:00</parkingRecordVersionTime>
+                        <parkingNumberOfSpaces>270</parkingNumberOfSpaces>
+                        <operator xsi:type="ContactDetails" id="3f2738f6-2da2-4215-9ead-53990b7489a6" version="3">
+                            <contactOrganisationName>
+                                <values>
+                                    <value lang="DUTCH">3</value>
+                                </values>
+                            </contactOrganisationName>
+                            <contactDetailsTelephoneNumber/>
+                            <contactDetailsEMail>customerservice@gotexaco.com</contactDetailsEMail>
+                        </operator>
+                        <parkingLocation xsi:type="Point">
+                            <pointByCoordinates>
+                                <pointCoordinates>
+                                    <latitude>50.854084</latitude>
+                                    <longitude>4.65828371</longitude>
+                                </pointCoordinates>
+                            </pointByCoordinates>
+                        </parkingLocation>
+                        <onlyAssignedParking/>
+                        <assignedParkingAmongOthers/>
+                        <tariffsAndPayment>
+                            <freeOfCharge>true</freeOfCharge>
+                        </tariffsAndPayment>
+                        <parkingEquipmentOrServiceFacility equipmentOrServiceFacilityIndex="0">
+                            <parkingEquipmentOrServiceFacility xsi:type="ServiceFacility">
+                                <serviceFacilityType>shop</serviceFacilityType>
+                            </parkingEquipmentOrServiceFacility>
+                        </parkingEquipmentOrServiceFacility>
+                        <parkingEquipmentOrServiceFacility equipmentOrServiceFacilityIndex="1">
+                            <parkingEquipmentOrServiceFacility xsi:type="ServiceFacility">
+                                <serviceFacilityType>hotel</serviceFacilityType>
+                            </parkingEquipmentOrServiceFacility>
+                        </parkingEquipmentOrServiceFacility>
+                        <parkingEquipmentOrServiceFacility equipmentOrServiceFacilityIndex="2">
+                            <parkingEquipmentOrServiceFacility xsi:type="ServiceFacility">
+                                <serviceFacilityType>restaurant</serviceFacilityType>
+                            </parkingEquipmentOrServiceFacility>
+                        </parkingEquipmentOrServiceFacility>
+                        <parkingEquipmentOrServiceFacility equipmentOrServiceFacilityIndex="3">
+                            <parkingEquipmentOrServiceFacility xsi:type="ServiceFacility">
+                                <serviceFacilityType>petrolStation</serviceFacilityType>
+                            </parkingEquipmentOrServiceFacility>
+                        </parkingEquipmentOrServiceFacility>
+                        <groupOfParkingSpaces groupIndex="0">
+                            <parkingSpaceBasics xsi:type="GroupOfParkingSpaces">
+                                <assignedParkingAmongOthers>
+                                    <vehicleCharacteristics>
+                                        <vehicleType>car</vehicleType>
+                                    </vehicleCharacteristics>
+                                </assignedParkingAmongOthers>
+                                <parkingNumberOfSpaces>230</parkingNumberOfSpaces>
+                                <parkingTypeOfGroup>statisticsOnly</parkingTypeOfGroup>
+                            </parkingSpaceBasics>
+                        </groupOfParkingSpaces>
+                        <groupOfParkingSpaces groupIndex="1">
+                            <parkingSpaceBasics xsi:type="GroupOfParkingSpaces">
+                                <assignedParkingAmongOthers>
+                                    <vehicleCharacteristics>
+                                        <vehicleType>lorry</vehicleType>
+                                    </vehicleCharacteristics>
+                                </assignedParkingAmongOthers>
+                                <parkingNumberOfSpaces>34</parkingNumberOfSpaces>
+                                <parkingTypeOfGroup>statisticsOnly</parkingTypeOfGroup>
+                            </parkingSpaceBasics>
+                        </groupOfParkingSpaces>
+                        <groupOfParkingSpaces groupIndex="2">
+                            <parkingSpaceBasics xsi:type="GroupOfParkingSpaces">
+                                <assignedParkingAmongOthers>
+                                    <vehicleCharacteristics>
+                                        <vehicleType>bus</vehicleType>
+                                    </vehicleCharacteristics>
+                                </assignedParkingAmongOthers>
+                                <parkingNumberOfSpaces>6</parkingNumberOfSpaces>
+                                <parkingTypeOfGroup>statisticsOnly</parkingTypeOfGroup>
+                            </parkingSpaceBasics>
+                        </groupOfParkingSpaces>
+                        <parkingSiteAddress xsi:type="ContactDetails" id="" version="3"/>
+                        <parkingAccess id="ParkingAccess1">
+                            <accessCategory>vehicleEntrance</accessCategory>
+                            <primaryRoad>
+                                <nameOfRoad>
+                                    <values>
+                                        <value lang="DUTCH">Liège-Brussel</value>
+                                    </values>
+                                </nameOfRoad>
+                                <roadIdentifier>
+                                    <values>
+                                        <value lang="DUTCH">A3</value>
+                                    </values>
+                                </roadIdentifier>
+                                <roadDestination>
+                                    <values>
+                                        <value lang="DUTCH">Brussel</value>
+                                    </values>
+                                </roadDestination>
+                            </primaryRoad>
+                            <location xsi:type="Point">
+                                <pointByCoordinates>
+                                    <pointCoordinates>
+                                        <latitude>50.852478</latitude>
+                                        <longitude>4.66192436</longitude>
+                                    </pointCoordinates>
+                                </pointByCoordinates>
+                            </location>
+                        </parkingAccess>
+                        <parkingStandardsAndSecurity>
+                            <labelSecurityLevel>unknown</labelSecurityLevel>
+                            <labelServiceLevel>unknown</labelServiceLevel>
+                            <parkingSecurity>unknown</parkingSecurity>
+                        </parkingStandardsAndSecurity>
+                        <interUrbanParkingSiteLocation>other</interUrbanParkingSiteLocation>
+                    </parkingRecord>
+                </parkingTable>
+            </parkingTablePublication>
+        </genericPublicationExtension>
+    </payloadPublication>
+</d2LogicalModel>

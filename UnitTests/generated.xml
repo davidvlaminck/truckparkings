@@ -7,9 +7,19 @@
             <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
         </supplierIdentification>
     </exchange>
-    2024-08-19T23:57:59.155722+02:00
-    <publicationCreator>
-        <country>be</country>
-        <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
-    </publicationCreator>
+    <payloadPublication lang="DUTCH" xsi:type="GenericPublication">
+        <publicationTime>2024-01-01T00:00:00+01:00</publicationTime>
+        <publicationCreator>
+            <country>be</country>
+            <nationalIdentifier>Vlaamse Overheid</nationalIdentifier>
+        </publicationCreator>
+        <genericPublicationName>ParkingTablePublication</genericPublicationName>
+        <genericPublicationExtension>
+            <parkingTablePublication>
+                <parkingTable id="1" version="1">
+                    <parkingTableVersionTime>2024-01-01T00:00:00+01:00</parkingTableVersionTime>
+                </parkingTable>
+            </parkingTablePublication>
+        </genericPublicationExtension>
+    </payloadPublication>
 </d2LogicalModel>

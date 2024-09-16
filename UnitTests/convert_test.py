@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from freezegun import freeze_time
 
 from converter import convert_json_to_xml, convert_dict_to_el_tree
 
@@ -16,11 +17,79 @@ def test_convert():
     assert expected == result
 
 
+def test_one_parking():
+    output_path = Path('generated_one_parking.xml')
+    expected_path = Path('one_parking.xml')
+    data_dict = {'parkings': [{"parkingLocation": {
+        "pointByCoordinates":
+            {"pointCoordinates": {"latitude": 50.854082325888626, "longitude": 4.658283837917553}}},
+        "parkingUsageScenario": {"parkingUsageScenario": "Snelwegparking",
+                                 "truckParkingDynamicManagement": "noDynamicParkingManagement"},
+        "parkingNumberOfSpaces": 270, "parkingAccess": {
+            "accessCategory": "vehicle entrance",
+            "id": "{1990A8C2-95D1-477B-8502-BAEE37A6265A}",
+            "location": [{"pointByCoordinates": {
+                "pointCoordinates": {
+                    "latitude": 50.85247680655896,
+                    "longitude": 4.661924219216416}}}],
+            "PrimaryRoad": [{"roadIdentifier": "A3",
+                             "nameOfRoad": "Liège-Brussel",
+                             "distanceToThisRoad": "None",
+                             "roadDestination": "Brussel"}]},
+        "parkingEquipmentOrServiceFacility": [
+            {"serviceFacilityType": "Shop", "type": "ServiceFacility"},
+            {"serviceFacilityType": "Hotel", "type": "ServiceFacility"},
+            {"serviceFacilityType": "Restaurant", "type": "ServiceFacility"},
+            {"serviceFacilityType": "Petrol station", "type": "ServiceFacility"}],
+        "parkingSiteAddress": None, "groupOfParkingSpaces": [{"parkingSpaceBasics": {
+            "parkingTypeOfGroup": "statisticsOnly", "parkingNumberOfSpaces": 230,
+            "assignedParkingAmongOthers": {"vehicleCharacteristics": {"vehicleType": "Car", "loadType": None}}}}, {
+            "parkingSpaceBasics": {
+                "parkingTypeOfGroup": "statisticsOnly",
+                "parkingNumberOfSpaces": 34,
+                "assignedParkingAmongOthers": {
+                    "vehicleCharacteristics": {
+                        "vehicleType": "Lorry",
+                        "loadType": None}}}},
+            {"parkingSpaceBasics": {
+                "parkingTypeOfGroup": "statisticsOnly",
+                "parkingNumberOfSpaces": 6,
+                "assignedParkingAmongOthers": {
+                    "vehicleCharacteristics": {
+                        "vehicleType": "Bus",
+                        "loadType": None}}}}],
+        "interUrbanParkingSiteLocation": None,
+        "operator": {"contactDetailsPostcode": None, "publishingAgreement": None,
+                     "contactDetailsStreet": None, "contactOrganisationName": 3, "country": None,
+                     "contactDetailsCity": None,
+                     "contactDetailsEMail": "customerservice@gotexaco.com",
+                     "contactDetailsTelephoneNumber": "",
+                     "id": "3f2738f6-2da2-4215-9ead-53990b7489a6"},
+        "parkingName": "E40 Heverlee Luik - Brussel",
+        "tariffsAndPayment": {"freeOfCharge": None},
+        "parkingStandardsAndSecurity": {"labelSecurityLevel": None,
+                                        "labelSecurityLevelSelfAssessment": None,
+                                        "certifiedSecureParking": None,
+                                        "parkingSupervision": {"parkingSupervision": None},
+                                        "parkingSecurity": [], "labelServiceLevel": None},
+        "id": "c00134eb-dbd1-4b04-9b5d-a0834cc9193e"}]}
+    with freeze_time("2024-01-01"):
+        tree = convert_dict_to_el_tree(
+            data_dict=data_dict,
+            parking_table_id='1', version='3')
+        tree.write(output_path, encoding='utf-8', xml_declaration=True)
+
+    result = ET.parse(output_path).getroot()
+    expected = ET.parse(expected_path).getroot()
+    assert elements_equal(result, expected)
+
+
 def test_empty_dict():
     output_path = Path('generated.xml')
     expected_path = Path('empty.xml')
-    tree = convert_dict_to_el_tree(dict={})
-    tree.write(output_path, encoding='utf-8', xml_declaration=True)
+    with freeze_time("2024-01-01"):
+        tree = convert_dict_to_el_tree(data_dict={'parkings': []}, parking_table_id='1', version='1')
+        tree.write(output_path, encoding='utf-8', xml_declaration=True)
 
     result = ET.parse(output_path).getroot()
     expected = ET.parse(expected_path).getroot()
