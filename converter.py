@@ -40,8 +40,8 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
         parkingLocation=ParkingLocation(pointByCoordinates=PointByCoordinates(pointCoordinates=PointCoordinates(
             latitude=Latitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['latitude']),
             longitude=Longitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['longitude'])))),
-        onlyAssignedParking=OnlyAssignedParking(""),
-        assignedParkingAmongOthers=AssignedParkingAmongOthers("")
+        onlyAssignedParking=OnlyAssignedParking(),
+        assignedParkingAmongOthers=AssignedParkingAmongOthers()
     )
 
     return record

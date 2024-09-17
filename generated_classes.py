@@ -244,7 +244,7 @@ class AssignedParkingAmongOthers(BaseGeneratedClass):
     """Assignments for parking. Other assignments are allowed as well, i.e. the parking spaces are convenient
     for this kind of assignment."""
 
-    def __init__(self, content: str):
+    def __init__(self, content: str = None):
         super().__init__(content)
         self._name = 'assignedParkingAmongOthers'
 
@@ -254,7 +254,7 @@ class OnlyAssignedParking(BaseGeneratedClass):
     By using this role, it is not allowed to use 'assignedParkingAmongOthers' and 'prohibitedParking'
     for the same type of attributes."""
 
-    def __init__(self, content: str):
+    def __init__(self, content: str = None):
         super().__init__(content)
         self._name = 'onlyAssignedParking'
 
@@ -338,7 +338,8 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  parkingNumberOfSpaces: ParkingNumberOfSpaces=None, operator: Operator=None,
                  onlyAssignedParking: OnlyAssignedParking=None,
                  assignedParkingAmongOthers: AssignedParkingAmongOthers=None):
-        super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation))
+        super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
+                          onlyAssignedParking, assignedParkingAmongOthers))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 

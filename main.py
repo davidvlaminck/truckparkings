@@ -1,7 +1,5 @@
 from generated_classes import D2LogicalModel
 
-from lxml import etree
-
 import xmlschema
 
 
