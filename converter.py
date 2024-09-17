@@ -7,7 +7,8 @@ from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier,
     ParkingTable, ParkingTablePublication, ParkingTableVersionTime, ParkingRecord, ParkingName, MultilingualString, \
     MultilingualStringValue, ParkingRecordVersionTime, ParkingNumberOfSpaces, ContactOrganisationName, Operator, \
     ContactDetailsEMail, ContactDetailsTelephoneNumber, Longitude, Latitude, PointCoordinates, PointByCoordinates, \
-    ParkingLocation, OnlyAssignedParking, AssignedParkingAmongOthers
+    ParkingLocation, OnlyAssignedParking, AssignedParkingAmongOthers, TariffsAndPayment, FreeOfCharge, \
+    ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -22,6 +23,13 @@ def read_json(json_path: Path) -> dict:
 
 
 def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
+    parkingEquipmentOrServiceFacilities = []
+    for service_facility in p['parkingEquipmentOrServiceFacility']:
+        parkingEquipmentOrServiceFacilities.append(
+            ParkingEquipmentOrServiceFacility(ParkingEquipmentOrServiceFacility(
+                serviceFacilityType=ServiceFacilityType(service_facility['serviceFacilityType']),
+                type_=service_facility['type'])))
+
     record = ParkingRecord(
         type_='InterUrbanParkingSite', id='c00134eb-dbd1-4b04-9b5d-a0834cc9193e',
         version=version,
@@ -41,7 +49,9 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
             latitude=Latitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['latitude']),
             longitude=Longitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['longitude'])))),
         onlyAssignedParking=OnlyAssignedParking(),
-        assignedParkingAmongOthers=AssignedParkingAmongOthers()
+        assignedParkingAmongOthers=AssignedParkingAmongOthers(),
+        tariffsAndPayment=TariffsAndPayment(freeOfCharge=FreeOfCharge('freeOfCharge' in p['tariffsAndPayment'])),
+        parkingEquipmentOrServiceFacility=ParkingEquipmentOrServiceFacilityList(parkingEquipmentOrServiceFacilities)
     )
 
     return record

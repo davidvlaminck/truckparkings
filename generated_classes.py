@@ -4,6 +4,37 @@ from enum import Enum
 import xml.etree.ElementTree as ET
 
 
+class ServiceFacilityTypeEnum(str, Enum):
+    Hotel = 'hotel'
+    Motel = 'motel'
+    OvernightAccommodation = 'overnightAccommodation'
+    Shop = 'shop'
+    Kiosk = 'kiosk'
+    FoodShopping = 'foodShopping'
+    Cafe = 'cafe'
+    Restaurant = 'restaurant'
+    RestaurantSelfService = 'restaurantSelfService'
+    MotorwayRestaurant = 'motorwayRestaurant'
+    MotorwayRestaurantSmall = 'motorwayRestaurantSmall'
+    SparePartsShopping = 'sparePartsShopping'
+    PetrolStation = 'petrolStation'
+    VehicleMaintenance = 'vehicleMaintenance'
+    TyreRepair = 'tyreRepair'
+    TruckRepair = 'truckRepair'
+    TruckWash = 'truckWash'
+    CarWash = 'carWash'
+    Pharmacy = 'pharmacy'
+    MedicalFacility = 'medicalFacility'
+    Police = 'police'
+    TouristInformation = 'touristInformation'
+    BikeSharing = 'bikeSharing'
+    Docstop = 'docstop'
+    Laundry = 'laundry'
+    LeisureActivities = 'leisureActivities'
+    Unknown = 'unknown'
+    Other = 'other'
+
+
 class CountryEnum(str, Enum):
     """CountryEnum -- List of countries.
 
@@ -61,6 +92,11 @@ def validate_countryEnum(country) -> bool:
     return True
 
 
+def validate_serviceFacilityTypeEnum(serviceFacilityType) -> bool:
+    if serviceFacilityType not in ServiceFacilityTypeEnum:
+        raise ValueError(f'Invalid ServiceFacilityType: {serviceFacilityType}')
+    return True
+
 class GeneratedClass(abc.ABC):
     @abc.abstractmethod
     def to_element(self, parent: ET.Element):
@@ -82,6 +118,20 @@ class BaseGeneratedClass(GeneratedClass):
         else:
             el = ET.SubElement(parent, self._name, attrib=self._attributes)
         el.text = self.content
+
+
+class GeneratedIndexedListClassWithChildren(GeneratedClass):
+    def __init__(self, children: list, index_name: str = 'index'):
+        super().__init__()
+        self._index_name = index_name
+        self._children = children
+
+    def to_element(self, parent: ET.Element):
+        for index, child in enumerate(c for c in self._children if c is not None):
+            if child._attributes is None:
+                child._attributes = {}
+            child._attributes[self._index_name] = str(index)
+            child.to_element(parent=parent)
 
 
 class GeneratedClassWithChildren(GeneratedClass):
@@ -200,6 +250,25 @@ class MultilingualString(GeneratedClassWithChildren):
         self._name = 'values'
 
 
+class FreeOfCharge(BaseGeneratedClass):
+    """Indicates whether parking is free of charge."""
+
+    def __init__(self, content: bool):
+        super().__init__(str(content).lower())
+        self._name = 'freeOfCharge'
+
+
+
+class TariffsAndPayment(GeneratedClassWithChildren):
+    """TariffsAndPayment -- Details of tariffs and payment methods for parking at the parking site.
+    freeOfCharge -- Indicates whether parking is free of charge.
+    """
+
+    def __init__(self, freeOfCharge: FreeOfCharge = None):
+        super().__init__((freeOfCharge, ))
+        self._name = 'tariffsAndPayment'
+
+
 class Latitude(BaseGeneratedClass):
     """Latitude -- The latitude of a point in space."""
 
@@ -269,6 +338,7 @@ class ParkingLocation(GeneratedClassWithChildren):
         self._name = 'parkingLocation'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': 'Point'}
 
+
 class ContactOrganisationName(GeneratedClassWithChildren):
     """Name of the organisation or service. Do not use this attribute in combination with role "parkingSiteAddress"."""
 
@@ -330,6 +400,63 @@ class ParkingNumberOfSpaces(BaseGeneratedClass):
         self._name = 'parkingNumberOfSpaces'
 
 
+mapping_serviceFacilityType = {
+    "Hotel": ServiceFacilityTypeEnum.Hotel,
+    "Motel": ServiceFacilityTypeEnum.Motel,
+    "Overnight accommodation": ServiceFacilityTypeEnum.OvernightAccommodation,
+    "Shop": ServiceFacilityTypeEnum.Shop,
+    "Kiosk": ServiceFacilityTypeEnum.Kiosk,
+    "Food shopping": ServiceFacilityTypeEnum.FoodShopping,
+    "Cafe": ServiceFacilityTypeEnum.Cafe,
+    "Restaurant": ServiceFacilityTypeEnum.Restaurant,
+    "Restaurant self service": ServiceFacilityTypeEnum.RestaurantSelfService,
+    "Motorway restaurant": ServiceFacilityTypeEnum.MotorwayRestaurant,
+    "Motorway restaurant small": ServiceFacilityTypeEnum.MotorwayRestaurantSmall,
+    "Spare parts shopping": ServiceFacilityTypeEnum.SparePartsShopping,
+    "Petrol station": ServiceFacilityTypeEnum.PetrolStation,
+    "Vehicle maintenance": ServiceFacilityTypeEnum.VehicleMaintenance,
+    "Tyre repair": ServiceFacilityTypeEnum.TyreRepair,
+    "Truck repair": ServiceFacilityTypeEnum.TruckRepair,
+    "Truck wash": ServiceFacilityTypeEnum.TruckWash,
+    "Car wash": ServiceFacilityTypeEnum.CarWash,
+    "Pharmacy": ServiceFacilityTypeEnum.Pharmacy,
+    "Medical facility": ServiceFacilityTypeEnum.MedicalFacility,
+    "Police": ServiceFacilityTypeEnum.Police,
+    "Tourist information": ServiceFacilityTypeEnum.TouristInformation,
+    "Bike sharing": ServiceFacilityTypeEnum.BikeSharing,
+    "Docstop": ServiceFacilityTypeEnum.Docstop,
+    "Laundry": ServiceFacilityTypeEnum.Laundry,
+    "Leisure activities": ServiceFacilityTypeEnum.LeisureActivities,
+    "Unknown": ServiceFacilityTypeEnum.Unknown,
+    "Other": ServiceFacilityTypeEnum.Other
+}
+
+class ServiceFacilityType(BaseGeneratedClass):
+    """ServiceFacilityType -- The type of service facility or equipment available at the parking site."""
+
+    def __init__(self, content: str):
+        mapped_content = mapping_serviceFacilityType[content]
+        validate_serviceFacilityTypeEnum(mapped_content)
+        super().__init__(mapped_content.value)
+        self._name = 'serviceFacilityType'
+
+class ParkingEquipmentOrServiceFacility(GeneratedClassWithChildren):
+    """ParkingEquipmentOrServiceFacility -- Equipment or service facility available at the parking site.
+    serviceFacilityType -- The type of service facility or equipment available at the parking site.
+    type -- The type of parking equipment or service facility.
+    """
+    def __init__(self, parkingEquipmentOrServiceFacility = None, serviceFacilityType: ServiceFacilityType=None, type_: str = None):
+        super().__init__((parkingEquipmentOrServiceFacility, serviceFacilityType))
+        self._name = 'parkingEquipmentOrServiceFacility'
+        if type_ is not None:
+            self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_}
+
+
+class ParkingEquipmentOrServiceFacilityList(GeneratedIndexedListClassWithChildren):
+    def __init__(self, parkingEquipmentOrServiceFacility: [ParkingEquipmentOrServiceFacility]):
+        super().__init__(parkingEquipmentOrServiceFacility, index_name='equipmentOrServiceFacilityIndex')
+
+
 class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
     """A container for static parking information. Must be specialised as a parking site or as a group of parking sites."""
 
@@ -337,9 +464,11 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  parkingRecordVersionTime: ParkingRecordVersionTime=None, parkingLocation: ParkingLocation=None,
                  parkingNumberOfSpaces: ParkingNumberOfSpaces=None, operator: Operator=None,
                  onlyAssignedParking: OnlyAssignedParking=None,
-                 assignedParkingAmongOthers: AssignedParkingAmongOthers=None):
+                 assignedParkingAmongOthers: AssignedParkingAmongOthers=None, tariffsAndPayment: TariffsAndPayment=None,
+                 parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,):
         super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
-                          onlyAssignedParking, assignedParkingAmongOthers))
+                          onlyAssignedParking, assignedParkingAmongOthers, tariffsAndPayment,
+                          parkingEquipmentOrServiceFacility))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 
