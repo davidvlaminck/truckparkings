@@ -8,7 +8,9 @@ from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier,
     MultilingualStringValue, ParkingRecordVersionTime, ParkingNumberOfSpaces, ContactOrganisationName, Operator, \
     ContactDetailsEMail, ContactDetailsTelephoneNumber, Longitude, Latitude, PointCoordinates, PointByCoordinates, \
     ParkingLocation, OnlyAssignedParking, AssignedParkingAmongOthers, TariffsAndPayment, FreeOfCharge, \
-    ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType
+    ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType, GroupOfParkingSpaces, \
+    ParkingSpaceBasics, GroupOfParkingSpacesList, ParkingTypeOfGroup, VehicleCharacteristics, VehicleType, \
+    ParkingsSiteAddress
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -23,12 +25,34 @@ def read_json(json_path: Path) -> dict:
 
 
 def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
+    groupOfParkingSpaces = []
+    for group in p['groupOfParkingSpaces']:
+        groupOfParkingSpaces.append(
+            GroupOfParkingSpaces(
+                parkingSpaceBasics=ParkingSpaceBasics(
+                    type_='GroupOfParkingSpaces',
+                    parkingTypeOfGroup=ParkingTypeOfGroup(group['parkingSpaceBasics']['parkingTypeOfGroup']),
+                    parkingNumberOfSpaces=ParkingNumberOfSpaces(group['parkingSpaceBasics']['parkingNumberOfSpaces']),
+                    assignedParkingAmongOthers=AssignedParkingAmongOthers(
+                        vehicleCharacteristics=VehicleCharacteristics(vehicleType=VehicleType(
+                            group['parkingSpaceBasics']['assignedParkingAmongOthers']['vehicleCharacteristics'][
+                                'vehicleType']
+                        ))
+                        #     loadType=group['parkingSpaceBasics']['assignedParkingAmongOthers']['vehicleCharacteristics'][
+                        #         'loadType'])
+                    ))))
+
+
     parkingEquipmentOrServiceFacilities = []
     for service_facility in p['parkingEquipmentOrServiceFacility']:
         parkingEquipmentOrServiceFacilities.append(
             ParkingEquipmentOrServiceFacility(ParkingEquipmentOrServiceFacility(
                 serviceFacilityType=ServiceFacilityType(service_facility['serviceFacilityType']),
                 type_=service_facility['type'])))
+
+    parkingSiteAddress = ParkingsSiteAddress(id='', version=version)
+    if p['parkingSiteAddress'] is not None:
+        parkingSiteAddress = ParkingsSiteAddress(id=p['parkingSiteAddress']['id'], version=version)
 
     record = ParkingRecord(
         type_='InterUrbanParkingSite', id='c00134eb-dbd1-4b04-9b5d-a0834cc9193e',
@@ -51,13 +75,15 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
         onlyAssignedParking=OnlyAssignedParking(),
         assignedParkingAmongOthers=AssignedParkingAmongOthers(),
         tariffsAndPayment=TariffsAndPayment(freeOfCharge=FreeOfCharge('freeOfCharge' in p['tariffsAndPayment'])),
-        parkingEquipmentOrServiceFacility=ParkingEquipmentOrServiceFacilityList(parkingEquipmentOrServiceFacilities)
+        parkingEquipmentOrServiceFacility=ParkingEquipmentOrServiceFacilityList(parkingEquipmentOrServiceFacilities,),
+        groupOfParkingSpaces=GroupOfParkingSpacesList(groupOfParkingSpaces),
+        parkingSiteAddress=parkingSiteAddress,
     )
 
     return record
 
 
-def convert_dict_to_el_tree(data_dict: dict, parking_table_id: str, version: str) -> ET.ElementTree:
+def convert_dict_to_el_tree(data_dict: dict, parking_table_id: str = '', version: str = '') -> ET.ElementTree:
     parking_table = ParkingTable(id=parking_table_id, version=version,
                                  parkingTableVersionTime=ParkingTableVersionTime(),
                                  parkingRecords=[create_parkingrecord_from_dict(p=p, version=version)

@@ -97,13 +97,18 @@ def test_empty_dict():
 
 
 def elements_equal(e1, e2):
-    if e1.tag != e2.tag: raise SyntaxError('tag not equal')
+    if e1.tag != e2.tag:
+        raise SyntaxError(f'tag not equal: {e1.tag} and {e2.tag}')
     e1_text = e1.text.strip() if e1.text else ''
     e2_text = e2.text.strip() if e2.text else ''
-    if e1_text != e2_text: raise SyntaxError('text not equal')
+    if e1_text != e2_text:
+        raise SyntaxError(f'text not equal {e1_text} and {e2_text}')
     e1_tail = e1.tail.strip() if e1.tail else ''
     e2_tail = e2.tail.strip() if e2.tail else ''
-    if e1_tail != e2_tail: raise SyntaxError('tail not equal')
-    if e1.attrib != e2.attrib: raise SyntaxError('attrib not equal')
-    if len(e1) != len(e2): raise SyntaxError('length not equal')
+    if e1_tail != e2_tail:
+        raise SyntaxError(f'tail not equal {e1_tail} and {e2_tail}')
+    if e1.attrib != e2.attrib:
+        raise SyntaxError(f'attrib not equal {e1.attrib} and {e2.attrib}')
+    if len(e1) != len(e2):
+        raise SyntaxError(f'length not equal {str(e1)} and {str(e2)}')
     return all(elements_equal(c1, c2) for c1, c2 in zip(e1, e2))

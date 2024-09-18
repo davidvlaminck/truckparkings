@@ -4,6 +4,77 @@ from enum import Enum
 import xml.etree.ElementTree as ET
 
 
+class LoadTypeEnum(str, Enum):
+    """LoadTypeEnum -- List of types of load that may be carried by a vehicle."""
+    Animals = 'animals'
+    Asbestos = 'asbestos'
+    Beverages = 'beverages'
+    BuildingMaterials = 'buildingMaterials'
+    Chemicals = 'chemicals'
+    CombustibleMaterials = 'combustibleMaterials'
+    CorrosiveMaterials = 'corrosiveMaterials'
+    Debris = 'debris'
+    Empty = 'empty'
+    ExplosiveMaterials = 'explosiveMaterials'
+    ExtraHighLoad = 'extraHighLoad'
+    ExtraLongLoad = 'extraLongLoad'
+    ExtraWideLoad = 'extraWideLoad'
+    Fuel = 'fuel'
+    Glass = 'glass'
+    Goods = 'goods'
+    HazardousMaterials = 'hazardousMaterials'
+    Liquid = 'liquid'
+    Livestock = 'livestock'
+    Materials = 'materials'
+    MaterialsDangerousForPeople = 'materialsDangerousForPeople'
+    MaterialsDangerousForTheEnvironment = 'materialsDangerousForTheEnvironment'
+    MaterialsDangerousForWater = 'materialsDangerousForWater'
+    Oil = 'oil'
+    Ordinary = 'ordinary'
+    PerishableProducts = 'perishableProducts'
+    Petrol = 'petrol'
+    PharmaceuticalMaterials = 'pharmaceuticalMaterials'
+    RadioactiveMaterials = 'radioactiveMaterials'
+    Refuse = 'refuse'
+    ToxicMaterials = 'toxicMaterials'
+    Vehicles = 'vehicles'
+    Other = 'other'
+
+
+class VehicleTypeEnum(str, Enum):
+    AgriculturalVehicle = 'agriculturalVehicle'
+    AnyVehicle = 'anyVehicle'
+    ArticulatedVehicle = 'articulatedVehicle'
+    Bicycle = 'bicycle'
+    Bus = 'bus'
+    Car = 'car'
+    Caravan = 'caravan'
+    CarOrLightVehicle = 'carOrLightVehicle'
+    CarWithCaravan = 'carWithCaravan'
+    CarWithTrailer = 'carWithTrailer'
+    ConstructionOrMaintenanceVehicle = 'constructionOrMaintenanceVehicle'
+    FourWheelDrive = 'fourWheelDrive'
+    HighSidedVehicle = 'highSidedVehicle'
+    Lorry = 'lorry'
+    Moped = 'moped'
+    Motorcycle = 'motorcycle'
+    MotorcycleWithSideCar = 'motorcycleWithSideCar'
+    Motorscooter = 'motorscooter'
+    Tanker = 'tanker'
+    ThreeWheeledVehicle = 'threeWheeledVehicle'
+    Trailer = 'trailer'
+    Tram = 'tram'
+    TwoWheeledVehicle = 'twoWheeledVehicle'
+    Van = 'van'
+    VehicleWithCatalyticConverter = 'vehicleWithCatalyticConverter'
+    VehicleWithoutCatalyticConverter = 'vehicleWithoutCatalyticConverter'
+    VehicleWithCaravan = 'vehicleWithCaravan'
+    VehicleWithTrailer = 'vehicleWithTrailer'
+    WithEvenNumberedRegistrationPlates = 'withEvenNumberedRegistrationPlates'
+    WithOddNumberedRegistrationPlates = 'withOddNumberedRegistrationPlates'
+    Other = 'other'
+
+
 class ServiceFacilityTypeEnum(str, Enum):
     Hotel = 'hotel'
     Motel = 'motel'
@@ -92,10 +163,23 @@ def validate_countryEnum(country) -> bool:
     return True
 
 
+def validate_vehicleTypeEnum(vehicleType) -> bool:
+    if vehicleType not in VehicleTypeEnum:
+        raise ValueError(f'Invalid vehicleType: {vehicleType}')
+    return True
+
+
 def validate_serviceFacilityTypeEnum(serviceFacilityType) -> bool:
     if serviceFacilityType not in ServiceFacilityTypeEnum:
         raise ValueError(f'Invalid ServiceFacilityType: {serviceFacilityType}')
     return True
+
+
+def validate_loadTypeEnum(loadType) -> bool:
+    if loadType not in LoadTypeEnum:
+        raise ValueError(f'Invalid loadType: {loadType}')
+    return True
+
 
 class GeneratedClass(abc.ABC):
     @abc.abstractmethod
@@ -105,6 +189,12 @@ class GeneratedClass(abc.ABC):
     def __init__(self):
         self._name = None
         self._attributes = None
+
+    def __str__(self):
+        return f'{self.__class__.__name__}({self.__dict__})'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class BaseGeneratedClass(GeneratedClass):
@@ -144,6 +234,9 @@ class GeneratedClassWithChildren(GeneratedClass):
             el = ET.SubElement(parent, self._name)
         else:
             el = ET.SubElement(parent, self._name, attrib=self._attributes)
+
+        if self._children is None:
+            return
 
         for child in (c for c in self._children if c is not None):
             child.to_element(parent=el)
@@ -305,16 +398,47 @@ class PointByCoordinates(GeneratedClassWithChildren):
     pointCoordinates -- The coordinates of the point."""
 
     def __init__(self, pointCoordinates: PointCoordinates):
-        super().__init__((pointCoordinates,))
+        super().__init__(children=(pointCoordinates,))
         self._name = 'pointByCoordinates'
 
 
-class AssignedParkingAmongOthers(BaseGeneratedClass):
+class VehicleType(BaseGeneratedClass):
+    """VehicleType -- The type of vehicle."""
+
+    def __init__(self, content: str):
+        mapped_content = mapping_vehicleType[content]
+        validate_vehicleTypeEnum(mapped_content)
+        super().__init__(mapped_content.value)
+        self._name = 'vehicleType'
+
+
+class LoadType(BaseGeneratedClass):
+    """LoadType -- The type of load."""
+
+    def __init__(self, content: str):
+        mapped_content = mapping_loadType[content]
+        validate_loadTypeEnum(mapped_content)
+        super().__init__(mapped_content.value)
+        self._name = 'loadType'
+
+
+class VehicleCharacteristics(GeneratedClassWithChildren):
+    """VehicleCharacteristics -- Characteristics of a vehicle.
+    vehicleType -- The type of vehicle.
+    loadType -- The type of load carried by the vehicle.
+    """
+
+    def __init__(self, vehicleType: VehicleType = None, loadType: LoadType = None):
+        super().__init__(children=(vehicleType, loadType))
+        self._name = 'vehicleCharacteristics'
+
+
+class AssignedParkingAmongOthers(GeneratedClassWithChildren):
     """Assignments for parking. Other assignments are allowed as well, i.e. the parking spaces are convenient
     for this kind of assignment."""
 
-    def __init__(self, content: str = None):
-        super().__init__(content)
+    def __init__(self, vehicleCharacteristics: VehicleCharacteristics = None):
+        super().__init__(children=(vehicleCharacteristics,))
         self._name = 'assignedParkingAmongOthers'
 
 
@@ -326,6 +450,30 @@ class OnlyAssignedParking(BaseGeneratedClass):
     def __init__(self, content: str = None):
         super().__init__(content)
         self._name = 'onlyAssignedParking'
+
+
+class ContactDetails(BaseGeneratedClass):
+    """ContactDetails -- Details of the contact person or organisation.
+    """
+
+    def __init__(self):
+        super().__init__("")
+        self._name = 'contactDetails'
+        raise NotImplementedError()
+
+
+
+class ParkingsSiteAddress(GeneratedClassWithChildren):
+    """ParkingsSiteAddress -- The address of a parking site or group of parking sites.
+    country -- The country of the parking site.
+    nationalIdentifier -- Identifier or name unique within the specified country.
+    """
+
+    def __init__(self, id: str, version: str, contactDetails: ContactDetails=None):
+        super().__init__((contactDetails,))
+        self._name = 'parkingSiteAddress'
+        self._attributes = {'id': id, 'version': version,
+                            '{http://www.w3.org/2001/XMLSchema-instance}type': 'ContactDetails'}
 
 
 class ParkingLocation(GeneratedClassWithChildren):
@@ -431,6 +579,77 @@ mapping_serviceFacilityType = {
     "Other": ServiceFacilityTypeEnum.Other
 }
 
+mapping_vehicleType = {
+    "Agricultural vehicle": VehicleTypeEnum.AgriculturalVehicle,
+    "Any vehicle": VehicleTypeEnum.AnyVehicle,
+    "Articulated vehicle": VehicleTypeEnum.ArticulatedVehicle,
+    "Bicycle": VehicleTypeEnum.Bicycle,
+    "Bus": VehicleTypeEnum.Bus,
+    "Car": VehicleTypeEnum.Car,
+    "Caravan": VehicleTypeEnum.Caravan,
+    "Car or light vehicle": VehicleTypeEnum.CarOrLightVehicle,
+    "Car with caravan": VehicleTypeEnum.CarWithCaravan,
+    "Car with trailer": VehicleTypeEnum.CarWithTrailer,
+    "Construction or maintenance vehicle": VehicleTypeEnum.ConstructionOrMaintenanceVehicle,
+    "Four wheel drive": VehicleTypeEnum.FourWheelDrive,
+    "High sided vehicle": VehicleTypeEnum.HighSidedVehicle,
+    "Lorry": VehicleTypeEnum.Lorry,
+    "Moped": VehicleTypeEnum.Moped,
+    "Motorcycle": VehicleTypeEnum.Motorcycle,
+    "Motorcycle with side car": VehicleTypeEnum.MotorcycleWithSideCar,
+    "Motorscooter": VehicleTypeEnum.Motorscooter,
+    "Tanker": VehicleTypeEnum.Tanker,
+    "Three wheeled vehicle": VehicleTypeEnum.ThreeWheeledVehicle,
+    "Trailer": VehicleTypeEnum.Trailer,
+    "Tram": VehicleTypeEnum.Tram,
+    "Two wheeled vehicle": VehicleTypeEnum.TwoWheeledVehicle,
+    "Van": VehicleTypeEnum.Van,
+    "Vehicle with catalytic converter": VehicleTypeEnum.VehicleWithCatalyticConverter,
+    "Vehicle without catalytic converter": VehicleTypeEnum.VehicleWithoutCatalyticConverter,
+    "Vehicle with caravan": VehicleTypeEnum.VehicleWithCaravan,
+    "Vehicle with trailer": VehicleTypeEnum.VehicleWithTrailer,
+    "With even numbered registration plates": VehicleTypeEnum.WithEvenNumberedRegistrationPlates,
+    "With odd numbered registration plates": VehicleTypeEnum.WithOddNumberedRegistrationPlates,
+    "Other": VehicleTypeEnum.Other
+}
+
+mapping_loadType = {
+    "Animals": LoadTypeEnum.Animals,
+    "Asbestos": LoadTypeEnum.Asbestos,
+    "Beverages": LoadTypeEnum.Beverages,
+    "Building materials": LoadTypeEnum.BuildingMaterials,
+    "Chemicals": LoadTypeEnum.Chemicals,
+    "Combustible materials": LoadTypeEnum.CombustibleMaterials,
+    "Corrosive materials": LoadTypeEnum.CorrosiveMaterials,
+    "Debris": LoadTypeEnum.Debris,
+    "Empty": LoadTypeEnum.Empty,
+    "Explosive materials": LoadTypeEnum.ExplosiveMaterials,
+    "Extra high load": LoadTypeEnum.ExtraHighLoad,
+    "Extra long load": LoadTypeEnum.ExtraLongLoad,
+    "Extra wide load": LoadTypeEnum.ExtraWideLoad,
+    "Fuel": LoadTypeEnum.Fuel,
+    "Glass": LoadTypeEnum.Glass,
+    "Goods": LoadTypeEnum.Goods,
+    "Hazardous materials": LoadTypeEnum.HazardousMaterials,
+    "Liquid": LoadTypeEnum.Liquid,
+    "Livestock": LoadTypeEnum.Livestock,
+    "Materials": LoadTypeEnum.Materials,
+    "Materials dangerous for people": LoadTypeEnum.MaterialsDangerousForPeople,
+    "Materials dangerous for the environment": LoadTypeEnum.MaterialsDangerousForTheEnvironment,
+    "Materials dangerous for water": LoadTypeEnum.MaterialsDangerousForWater,
+    "Oil": LoadTypeEnum.Oil,
+    "Ordinary": LoadTypeEnum.Ordinary,
+    "Perishable products": LoadTypeEnum.PerishableProducts,
+    "Petrol": LoadTypeEnum.Petrol,
+    "Pharmaceutical materials": LoadTypeEnum.PharmaceuticalMaterials,
+    "Radioactive materials": LoadTypeEnum.RadioactiveMaterials,
+    "Refuse": LoadTypeEnum.Refuse,
+    "Toxic materials": LoadTypeEnum.ToxicMaterials,
+    "Vehicles": LoadTypeEnum.Vehicles,
+    "Other": LoadTypeEnum.Other
+}
+
+
 class ServiceFacilityType(BaseGeneratedClass):
     """ServiceFacilityType -- The type of service facility or equipment available at the parking site."""
 
@@ -457,6 +676,43 @@ class ParkingEquipmentOrServiceFacilityList(GeneratedIndexedListClassWithChildre
         super().__init__(parkingEquipmentOrServiceFacility, index_name='equipmentOrServiceFacilityIndex')
 
 
+class ParkingTypeOfGroup(BaseGeneratedClass):
+    """ParkingTypeOfGroup -- The type of group of parking spaces."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'parkingTypeOfGroup'
+
+
+class ParkingSpaceBasics(GeneratedClassWithChildren):
+    """ParkingSpaceBasics -- Basic information about a parking space.
+    parkingTypeOfGroup -- The type of group of parking spaces.
+    parkingNumberOfSpaces -- Number of parking spaces in the group.
+    assignedParkingAmongOthers -- Assignments for parking. Other assignments are allowed as well, i.e. the parking spaces are convenient for this kind of assignment.
+    """
+
+    def __init__(self, type_: str, assignedParkingAmongOthers: AssignedParkingAmongOthers,
+                 parkingNumberOfSpaces: ParkingNumberOfSpaces=None, parkingTypeOfGroup: ParkingTypeOfGroup = None):
+        super().__init__((assignedParkingAmongOthers, parkingNumberOfSpaces, parkingTypeOfGroup))
+        self._name = 'parkingSpaceBasics'
+        self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_}
+
+
+class GroupOfParkingSpaces(GeneratedClassWithChildren):
+    """GroupOfParkingSpaces -- A group of parking spaces with the same characteristics.
+    parkingSpaceBasics -- Basic information about the parking spaces in the group.
+    """
+
+    def __init__(self, parkingSpaceBasics: ParkingSpaceBasics):
+        super().__init__((parkingSpaceBasics,))
+        self._name = 'groupOfParkingSpaces'
+
+
+class GroupOfParkingSpacesList(GeneratedIndexedListClassWithChildren):
+    def __init__(self, groupOfParkingSpaces: [GroupOfParkingSpaces]):
+        super().__init__(groupOfParkingSpaces, index_name='groupIndex')
+
+
 class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
     """A container for static parking information. Must be specialised as a parking site or as a group of parking sites."""
 
@@ -465,10 +721,11 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  parkingNumberOfSpaces: ParkingNumberOfSpaces=None, operator: Operator=None,
                  onlyAssignedParking: OnlyAssignedParking=None,
                  assignedParkingAmongOthers: AssignedParkingAmongOthers=None, tariffsAndPayment: TariffsAndPayment=None,
-                 parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,):
+                 parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,
+                 groupOfParkingSpaces: GroupOfParkingSpacesList=None, parkingSiteAddress: ParkingsSiteAddress=None):
         super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
                           onlyAssignedParking, assignedParkingAmongOthers, tariffsAndPayment,
-                          parkingEquipmentOrServiceFacility))
+                          parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 
