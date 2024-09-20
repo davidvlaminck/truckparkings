@@ -10,7 +10,8 @@ from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier,
     ParkingLocation, OnlyAssignedParking, AssignedParkingAmongOthers, TariffsAndPayment, FreeOfCharge, \
     ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType, GroupOfParkingSpaces, \
     ParkingSpaceBasics, GroupOfParkingSpacesList, ParkingTypeOfGroup, VehicleCharacteristics, VehicleType, \
-    ParkingsSiteAddress
+    ParkingsSiteAddress, LoadType, ParkingAccess, AccessCategory, PrimaryRoad, NameOfRoad, RoadIdentifier, \
+    RoadDestination, Location
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -36,11 +37,9 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
                     assignedParkingAmongOthers=AssignedParkingAmongOthers(
                         vehicleCharacteristics=VehicleCharacteristics(vehicleType=VehicleType(
                             group['parkingSpaceBasics']['assignedParkingAmongOthers']['vehicleCharacteristics'][
-                                'vehicleType']
-                        ))
-                        #     loadType=group['parkingSpaceBasics']['assignedParkingAmongOthers']['vehicleCharacteristics'][
-                        #         'loadType'])
-                    ))))
+                                'vehicleType']),
+                            loadType=LoadType(group['parkingSpaceBasics']['assignedParkingAmongOthers'][
+                                              'vehicleCharacteristics'].get('loadType', None)))))))
 
 
     parkingEquipmentOrServiceFacilities = []
@@ -78,6 +77,22 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
         parkingEquipmentOrServiceFacility=ParkingEquipmentOrServiceFacilityList(parkingEquipmentOrServiceFacilities,),
         groupOfParkingSpaces=GroupOfParkingSpacesList(groupOfParkingSpaces),
         parkingSiteAddress=parkingSiteAddress,
+        parkingAccess=ParkingAccess(
+            id=p['parkingAccess']['id'], accessCategory=AccessCategory(p['parkingAccess']['accessCategory']),
+            primaryRoad=PrimaryRoad(
+                nameOfRoad=NameOfRoad(multilingualString=MultilingualString(values=[
+                    MultilingualStringValue(value=p['parkingAccess']['PrimaryRoad'][0]['nameOfRoad'],
+                                            lang='DUTCH')])),
+                roadIdentifier=RoadIdentifier(multilingualString=MultilingualString(values=[
+                    MultilingualStringValue(value=p['parkingAccess']['PrimaryRoad'][0]['roadIdentifier'],
+                                            lang='DUTCH')])),
+                roadDestination=RoadDestination(multilingualString=MultilingualString(values=[
+                    MultilingualStringValue(value=p['parkingAccess']['PrimaryRoad'][0]['roadDestination'],
+                                            lang='DUTCH')]))),
+            location=Location(pointByCoordinates=PointByCoordinates(pointCoordinates=PointCoordinates(
+                latitude=Latitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['latitude']),
+                longitude=Longitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['longitude']))))
+        ),
     )
 
     return record

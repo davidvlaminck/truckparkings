@@ -4,6 +4,11 @@ from enum import Enum
 import xml.etree.ElementTree as ET
 
 
+class AccessCategoryEnum(str, Enum):
+    """Specifies the category of the access."""
+    VehicleEntranceAndExit = 'vehicleEntranceAndExit'
+    VehicleEntrance = 'vehicleEntrance'
+
 class LoadTypeEnum(str, Enum):
     """LoadTypeEnum -- List of types of load that may be carried by a vehicle."""
     Animals = 'animals'
@@ -155,6 +160,12 @@ class CountryEnum(str, Enum):
     TR = 'tr'  # Turkey
     VA = 'va'  # Vatican City State
     OTHER = 'other'  # Other than as defined in this enumeration.
+
+
+def validate_accessCategoryEnum(accessCategory) -> bool:
+    if accessCategory not in AccessCategoryEnum:
+        raise ValueError(f'Invalid accessCategory: {accessCategory}')
+    return True
 
 
 def validate_countryEnum(country) -> bool:
@@ -416,6 +427,9 @@ class LoadType(BaseGeneratedClass):
     """LoadType -- The type of load."""
 
     def __init__(self, content: str):
+        if content is None:
+            super().__init__(None)
+            return
         mapped_content = mapping_loadType[content]
         validate_loadTypeEnum(mapped_content)
         super().__init__(mapped_content.value)
@@ -649,6 +663,11 @@ mapping_loadType = {
     "Other": LoadTypeEnum.Other
 }
 
+mapping_accessCategory = {
+    "vehicle entrance and exit": AccessCategoryEnum.VehicleEntranceAndExit,
+    "vehicle entrance": AccessCategoryEnum.VehicleEntrance
+}
+
 
 class ServiceFacilityType(BaseGeneratedClass):
     """ServiceFacilityType -- The type of service facility or equipment available at the parking site."""
@@ -713,6 +732,70 @@ class GroupOfParkingSpacesList(GeneratedIndexedListClassWithChildren):
         super().__init__(groupOfParkingSpaces, index_name='groupIndex')
 
 
+class Location(GeneratedClassWithChildren):
+    """Location -- The location of the parking site or group of parking sites.
+    pointByCoordinates -- A point defined by coordinates.
+    """
+
+    def __init__(self, pointByCoordinates: PointByCoordinates):
+        super().__init__((pointByCoordinates,))
+        self._name = 'location'
+        self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': 'Point'}
+
+
+class AccessCategory(BaseGeneratedClass):
+    """AccessCategory -- The category of the access."""
+
+    def __init__(self, content: str):
+        mapped_content = mapping_accessCategory[content]
+        validate_accessCategoryEnum(mapped_content)
+        super().__init__(mapped_content.value)
+        self._name = 'accessCategory'
+
+class RoadIdentifier(GeneratedClassWithChildren):
+    """RoadIdentifier -- An identifier for a road."""
+
+    def __init__(self, multilingualString: MultilingualString):
+        super().__init__((multilingualString,))
+        self._name = 'roadIdentifier'
+
+
+class NameOfRoad(GeneratedClassWithChildren):
+    """NameOfRoad -- The name of a road."""
+
+    def __init__(self, multilingualString: MultilingualString):
+        super().__init__((multilingualString,))
+        self._name = 'nameOfRoad'
+
+
+class RoadDestination(GeneratedClassWithChildren):
+    """RoadDestination -- The destination of a road."""
+
+    def __init__(self, multilingualString: MultilingualString):
+        super().__init__((multilingualString,))
+        self._name = 'roadDestination'
+
+
+class PrimaryRoad(GeneratedClassWithChildren):
+    """PrimaryRoad -- The primary road on which the parking site is located."""
+
+    def __init__(self, nameOfRoad: NameOfRoad, roadIdentifier: RoadIdentifier, roadDestination: RoadDestination):
+        super().__init__((nameOfRoad, roadIdentifier, roadDestination))
+        self._name = 'primaryRoad'
+
+
+class ParkingAccess(GeneratedClassWithChildren):
+    """ParkingAccess -- Access to the parking site or group of parking sites.
+    accessType -- The type of access to the parking site or group of parking sites.
+    """
+
+    def __init__(self, id: str, accessCategory: AccessCategory, primaryRoad: PrimaryRoad = None,
+                 location: Location = None):
+        super().__init__((accessCategory, primaryRoad, location))
+        self._name = 'parkingAccess'
+        self._attributes = {'id': id}
+
+
 class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
     """A container for static parking information. Must be specialised as a parking site or as a group of parking sites."""
 
@@ -722,10 +805,11 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  onlyAssignedParking: OnlyAssignedParking=None,
                  assignedParkingAmongOthers: AssignedParkingAmongOthers=None, tariffsAndPayment: TariffsAndPayment=None,
                  parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,
-                 groupOfParkingSpaces: GroupOfParkingSpacesList=None, parkingSiteAddress: ParkingsSiteAddress=None):
+                 groupOfParkingSpaces: GroupOfParkingSpacesList=None, parkingSiteAddress: ParkingsSiteAddress=None,
+                 parkingAccess: ParkingAccess=None):
         super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
                           onlyAssignedParking, assignedParkingAmongOthers, tariffsAndPayment,
-                          parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress))
+                          parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress, parkingAccess))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 
