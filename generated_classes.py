@@ -784,6 +784,40 @@ class PrimaryRoad(GeneratedClassWithChildren):
         self._name = 'primaryRoad'
 
 
+class ParkingSecurity(BaseGeneratedClass):
+    """ParkingSecurity -- The security level of the parking site."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'parkingSecurity'
+
+
+class LabelServiceLevel(BaseGeneratedClass):
+    """LabelServiceLevel -- The service level of the parking site."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'labelServiceLevel'
+
+
+class LabelSecurityLevel(BaseGeneratedClass):
+    """LabelSecurityLevel -- The security level of the parking site."""
+
+    def __init__(self, content: str):
+        super().__init__(content)
+        self._name = 'labelSecurityLevel'
+
+
+class ParkingStandardsAndSecurity(GeneratedClassWithChildren):
+    """ParkingStandardsAndSecurity -- Standards and security at the parking site.
+    """
+
+    def __init__(self, labelSecurityLevel: LabelSecurityLevel = None, labelServiceLevel: LabelServiceLevel = None,
+                 parkingSecurity: ParkingSecurity = None):
+        super().__init__((labelSecurityLevel, labelServiceLevel, parkingSecurity))
+        self._name = 'parkingStandardsAndSecurity'
+
+
 class ParkingAccess(GeneratedClassWithChildren):
     """ParkingAccess -- Access to the parking site or group of parking sites.
     accessType -- The type of access to the parking site or group of parking sites.
@@ -806,10 +840,11 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  assignedParkingAmongOthers: AssignedParkingAmongOthers=None, tariffsAndPayment: TariffsAndPayment=None,
                  parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,
                  groupOfParkingSpaces: GroupOfParkingSpacesList=None, parkingSiteAddress: ParkingsSiteAddress=None,
-                 parkingAccess: ParkingAccess=None):
+                 parkingAccess: ParkingAccess=None, parkingStandardsAndSecurity: ParkingStandardsAndSecurity=None):
         super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
                           onlyAssignedParking, assignedParkingAmongOthers, tariffsAndPayment,
-                          parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress, parkingAccess))
+                          parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress, parkingAccess,
+                          parkingStandardsAndSecurity))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 

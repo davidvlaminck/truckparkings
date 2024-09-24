@@ -11,7 +11,7 @@ from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier,
     ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType, GroupOfParkingSpaces, \
     ParkingSpaceBasics, GroupOfParkingSpacesList, ParkingTypeOfGroup, VehicleCharacteristics, VehicleType, \
     ParkingsSiteAddress, LoadType, ParkingAccess, AccessCategory, PrimaryRoad, NameOfRoad, RoadIdentifier, \
-    RoadDestination, Location
+    RoadDestination, Location, ParkingStandardsAndSecurity, LabelSecurityLevel, LabelServiceLevel, ParkingSecurity
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -93,6 +93,9 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
                 latitude=Latitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['latitude']),
                 longitude=Longitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['longitude']))))
         ),
+        parkingStandardsAndSecurity=ParkingStandardsAndSecurity(labelSecurityLevel=LabelSecurityLevel('unknown'),
+                                                                labelServiceLevel=LabelServiceLevel('unknown'),
+                                                                parkingSecurity=ParkingSecurity('unknown')),
     )
 
     return record
