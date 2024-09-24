@@ -93,9 +93,10 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
                 latitude=Latitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['latitude']),
                 longitude=Longitude(p['parkingAccess']['location'][0]['pointByCoordinates']['pointCoordinates']['longitude']))))
         ),
-        parkingStandardsAndSecurity=ParkingStandardsAndSecurity(labelSecurityLevel=LabelSecurityLevel('unknown'),
-                                                                labelServiceLevel=LabelServiceLevel('unknown'),
-                                                                parkingSecurity=ParkingSecurity('unknown')),
+        parkingStandardsAndSecurity=ParkingStandardsAndSecurity(
+            labelSecurityLevel=LabelSecurityLevel(p['parkingStandardsAndSecurity']['labelSecurityLevel']),
+            labelServiceLevel=LabelServiceLevel(p['parkingStandardsAndSecurity']['labelServiceLevel']),
+            parkingSecurity=ParkingSecurity(p['parkingStandardsAndSecurity']['parkingSecurity'])),
     )
 
     return record

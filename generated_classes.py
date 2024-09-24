@@ -4,6 +4,45 @@ from enum import Enum
 import xml.etree.ElementTree as ET
 
 
+class ParkingSecurityEnum(str, Enum):
+    """Specifies security measures related to the parking site or particular spaces."""
+    SocialControl = 'socialControl'
+    SecurityStaff = 'securityStaff'
+    ExternalSecurity = 'externalSecurity'
+    CCTV = 'cctv'
+    Dog = 'dog'
+    Guard24Hours = 'guard24hours'
+    Lighting = 'lighting'
+    FloodLight = 'floodLight'
+    Fences = 'fences'
+    AreaSeperatedFromSurroundings = 'areaSeperatedFromSurroundings'
+    None_ = 'none'
+    Unknown = 'unknown'
+    Other = 'other'
+
+
+class ServiceLevelEnum(str, Enum):
+    """Service level defined by the LABEL project http://truckparkinglabel.eu."""
+    None_ = 'none'
+    ServiceLevel1 = 'serviceLevel1'
+    ServiceLevel2 = 'serviceLevel2'
+    ServiceLevel3 = 'serviceLevel3'
+    ServiceLevel4 = 'serviceLevel4'
+    ServiceLevel5 = 'serviceLevel5'
+    Unknown = 'unknown'
+
+
+class LabelSecurityLevelEnum(str, Enum):
+    """Security level defined by the LABEL project http://truckparkinglabel.eu."""
+    None_ = 'none'
+    SecurityLevel1 = 'securityLevel1'
+    SecurityLevel2 = 'securityLevel2'
+    SecurityLevel3 = 'securityLevel3'
+    SecurityLevel4 = 'securityLevel4'
+    SecurityLevel5 = 'securityLevel5'
+    Unknown = 'unknown'
+
+
 class AccessCategoryEnum(str, Enum):
     """Specifies the category of the access."""
     VehicleEntranceAndExit = 'vehicleEntranceAndExit'
@@ -162,9 +201,27 @@ class CountryEnum(str, Enum):
     OTHER = 'other'  # Other than as defined in this enumeration.
 
 
+def validate_parkingSecurityEnum(parkingSecurity) -> bool:
+    if parkingSecurity not in ParkingSecurityEnum:
+        raise ValueError(f'Invalid parkingSecurity: {parkingSecurity}')
+    return True
+
+
+def validate_ServiceLevelEnum(serviceLevel) -> bool:
+    if serviceLevel not in ServiceLevelEnum:
+        raise ValueError(f'Invalid serviceLevel: {serviceLevel}')
+    return True
+
+
 def validate_accessCategoryEnum(accessCategory) -> bool:
     if accessCategory not in AccessCategoryEnum:
         raise ValueError(f'Invalid accessCategory: {accessCategory}')
+    return True
+
+
+def validate_labelSecurityLevelEnum(labelSecurityLevel) -> bool:
+    if labelSecurityLevel not in LabelSecurityLevelEnum:
+        raise ValueError(f'Invalid labelSecurityLevel: {labelSecurityLevel}')
     return True
 
 
@@ -562,6 +619,43 @@ class ParkingNumberOfSpaces(BaseGeneratedClass):
         self._name = 'parkingNumberOfSpaces'
 
 
+mapping_parkingSecurity = {
+    "socialControl": ParkingSecurityEnum.SocialControl,
+    "securityStaff": ParkingSecurityEnum.SecurityStaff,
+    "externalSecurity": ParkingSecurityEnum.ExternalSecurity,
+    "cctv": ParkingSecurityEnum.CCTV,
+    "dog": ParkingSecurityEnum.Dog,
+    "guard24hours": ParkingSecurityEnum.Guard24Hours,
+    "lighting": ParkingSecurityEnum.Lighting,
+    "floodLight": ParkingSecurityEnum.FloodLight,
+    "fences": ParkingSecurityEnum.Fences,
+    "areaSeperatedFromSurroundings": ParkingSecurityEnum.AreaSeperatedFromSurroundings,
+    "none": ParkingSecurityEnum.None_,
+    "unknown": ParkingSecurityEnum.Unknown,
+    "other": ParkingSecurityEnum.Other
+}
+
+mapping_labelSecurityLevel = {
+    "none": LabelSecurityLevelEnum.None_,
+    "securityLevel1": LabelSecurityLevelEnum.SecurityLevel1,
+    "securityLevel2": LabelSecurityLevelEnum.SecurityLevel2,
+    "securityLevel3": LabelSecurityLevelEnum.SecurityLevel3,
+    "securityLevel4": LabelSecurityLevelEnum.SecurityLevel4,
+    "securityLevel5": LabelSecurityLevelEnum.SecurityLevel5,
+    "unknown": LabelSecurityLevelEnum.Unknown
+}
+
+mapping_LabelServiceLevel = {
+    "none": ServiceLevelEnum.None_,
+    "serviceLevel1": ServiceLevelEnum.ServiceLevel1,
+    "serviceLevel2": ServiceLevelEnum.ServiceLevel2,
+    "serviceLevel3": ServiceLevelEnum.ServiceLevel3,
+    "serviceLevel4": ServiceLevelEnum.ServiceLevel4,
+    "serviceLevel5": ServiceLevelEnum.ServiceLevel5,
+    "unknown": ServiceLevelEnum.Unknown
+}
+
+
 mapping_serviceFacilityType = {
     "Hotel": ServiceFacilityTypeEnum.Hotel,
     "Motel": ServiceFacilityTypeEnum.Motel,
@@ -788,7 +882,9 @@ class ParkingSecurity(BaseGeneratedClass):
     """ParkingSecurity -- The security level of the parking site."""
 
     def __init__(self, content: str):
-        super().__init__(content)
+        mapped_content = mapping_parkingSecurity[content]
+        validate_parkingSecurityEnum(mapped_content)
+        super().__init__(mapped_content.value)
         self._name = 'parkingSecurity'
 
 
@@ -796,7 +892,9 @@ class LabelServiceLevel(BaseGeneratedClass):
     """LabelServiceLevel -- The service level of the parking site."""
 
     def __init__(self, content: str):
-        super().__init__(content)
+        mapped_content = mapping_LabelServiceLevel[content]
+        validate_ServiceLevelEnum(mapped_content)
+        super().__init__(mapped_content.value)
         self._name = 'labelServiceLevel'
 
 
@@ -804,7 +902,9 @@ class LabelSecurityLevel(BaseGeneratedClass):
     """LabelSecurityLevel -- The security level of the parking site."""
 
     def __init__(self, content: str):
-        super().__init__(content)
+        mapped_content = mapping_labelSecurityLevel[content]
+        validate_labelSecurityLevelEnum(mapped_content)
+        super().__init__(mapped_content.value)
         self._name = 'labelSecurityLevel'
 
 
