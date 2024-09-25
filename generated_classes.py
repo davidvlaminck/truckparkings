@@ -338,7 +338,8 @@ mapping_serviceFacilityType = {
     "Laundry": ServiceFacilityTypeEnum.Laundry,
     "Leisure activities": ServiceFacilityTypeEnum.LeisureActivities,
     "Unknown": ServiceFacilityTypeEnum.Unknown,
-    "Other": ServiceFacilityTypeEnum.Other
+    "Other": ServiceFacilityTypeEnum.Other,
+    "sanitary": ServiceFacilityTypeEnum.Other,
 }
 
 mapping_vehicleType = {
@@ -363,6 +364,7 @@ mapping_vehicleType = {
     "Tanker": VehicleTypeEnum.Tanker,
     "Three wheeled vehicle": VehicleTypeEnum.ThreeWheeledVehicle,
     "Trailer": VehicleTypeEnum.Trailer,
+    "Motorhome": VehicleTypeEnum.Trailer,
     "Tram": VehicleTypeEnum.Tram,
     "Two wheeled vehicle": VehicleTypeEnum.TwoWheeledVehicle,
     "Van": VehicleTypeEnum.Van,
