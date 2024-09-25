@@ -27,11 +27,11 @@ def test_one_parking():
                                  "truckParkingDynamicManagement": "noDynamicParkingManagement"},
         "parkingNumberOfSpaces": 270, "parkingAccess": {
             "accessCategory": "vehicle entrance",
-            "id": "{1990A8C2-95D1-477B-8502-BAEE37A6265A}",
+            "id": "1990A8C2-95D1-477B-8502-BAEE37A6265A",
             "location": [{"pointByCoordinates": {
                 "pointCoordinates": {
-                    "latitude": 50.85247680655896,
-                    "longitude": 4.661924219216416}}}],
+                    "latitude": 50.85247681,
+                    "longitude": 4.66192422}}}],
             "PrimaryRoad": [{"roadIdentifier": "A3",
                              "nameOfRoad": "Liège-Brussel",
                              "distanceToThisRoad": "None",

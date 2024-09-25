@@ -11,7 +11,8 @@ from generated_classes import D2LogicalModel, Exchange, InternationalIdentifier,
     ParkingEquipmentOrServiceFacilityList, ParkingEquipmentOrServiceFacility, ServiceFacilityType, GroupOfParkingSpaces, \
     ParkingSpaceBasics, GroupOfParkingSpacesList, ParkingTypeOfGroup, VehicleCharacteristics, VehicleType, \
     ParkingsSiteAddress, LoadType, ParkingAccess, AccessCategory, PrimaryRoad, NameOfRoad, RoadIdentifier, \
-    RoadDestination, Location, ParkingStandardsAndSecurity, LabelSecurityLevel, LabelServiceLevel, ParkingSecurity
+    RoadDestination, Location, ParkingStandardsAndSecurity, LabelSecurityLevel, LabelServiceLevel, ParkingSecurity, \
+    InterUrbanParkingSiteLocation
 
 
 def convert_json_to_xml(json_path: Path, xml_path: Path):
@@ -69,8 +70,8 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
             contactDetailsTelephoneNumber=ContactDetailsTelephoneNumber(p['operator']['contactDetailsTelephoneNumber'])
         ),
         parkingLocation=ParkingLocation(pointByCoordinates=PointByCoordinates(pointCoordinates=PointCoordinates(
-            latitude=Latitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['latitude']),
-            longitude=Longitude(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['longitude'])))),
+            latitude=Latitude(round(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['latitude'], 8)),
+            longitude=Longitude(round(p['parkingLocation']['pointByCoordinates']['pointCoordinates']['longitude'],8))))),
         onlyAssignedParking=OnlyAssignedParking(),
         assignedParkingAmongOthers=AssignedParkingAmongOthers(),
         tariffsAndPayment=TariffsAndPayment(freeOfCharge=FreeOfCharge('freeOfCharge' in p['tariffsAndPayment'])),
@@ -97,6 +98,7 @@ def create_parkingrecord_from_dict(p: dict, version: str) -> ParkingRecord:
             labelSecurityLevel=LabelSecurityLevel(p['parkingStandardsAndSecurity']['labelSecurityLevel']),
             labelServiceLevel=LabelServiceLevel(p['parkingStandardsAndSecurity']['labelServiceLevel']),
             parkingSecurity=ParkingSecurity(p['parkingStandardsAndSecurity']['parkingSecurity'])),
+        interUrbanParkingSiteLocation=InterUrbanParkingSiteLocation(p['interUrbanParkingSiteLocation'])
     )
 
     return record

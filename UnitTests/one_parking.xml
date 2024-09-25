@@ -25,7 +25,7 @@
                                 <value lang="DUTCH">E40 Heverlee Luik - Brussel</value>
                             </values>
                         </parkingName>
-                        <parkingRecordVersionTime>2024-01-01T00:00:00</parkingRecordVersionTime>
+                        <parkingRecordVersionTime>2024-01-01T00:00:00+01:00</parkingRecordVersionTime>
                         <parkingNumberOfSpaces>270</parkingNumberOfSpaces>
                         <operator xsi:type="ContactDetails" id="3f2738f6-2da2-4215-9ead-53990b7489a6" version="3">
                             <contactOrganisationName>
@@ -39,8 +39,8 @@
                         <parkingLocation xsi:type="Point">
                             <pointByCoordinates>
                                 <pointCoordinates>
-                                    <latitude>50.854084</latitude>
-                                    <longitude>4.65828371</longitude>
+                                    <latitude>50.85408233</latitude>
+                                    <longitude>4.65828384</longitude>
                                 </pointCoordinates>
                             </pointByCoordinates>
                         </parkingLocation>
@@ -103,7 +103,7 @@
                             </parkingSpaceBasics>
                         </groupOfParkingSpaces>
                         <parkingSiteAddress xsi:type="ContactDetails" id="" version="3"/>
-                        <parkingAccess id="ParkingAccess1">
+                        <parkingAccess id="1990A8C2-95D1-477B-8502-BAEE37A6265A">
                             <accessCategory>vehicleEntrance</accessCategory>
                             <primaryRoad>
                                 <nameOfRoad>
@@ -125,8 +125,8 @@
                             <location xsi:type="Point">
                                 <pointByCoordinates>
                                     <pointCoordinates>
-                                        <latitude>50.852478</latitude>
-                                        <longitude>4.66192436</longitude>
+                                        <latitude>50.85247681</latitude>
+                                        <longitude>4.66192422</longitude>
                                     </pointCoordinates>
                                 </pointByCoordinates>
                             </location>

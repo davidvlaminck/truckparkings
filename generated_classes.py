@@ -4,6 +4,15 @@ from enum import Enum
 import xml.etree.ElementTree as ET
 
 
+class InterUrbanParkingSiteLocationEnum(str, Enum):
+    """Location of the truck or motorway related parking."""
+    Motorway = 'motorway'
+    NearbyMotorway = 'nearbyMotorway'
+    LayBy = 'layBy'
+    OnStreet = 'onStreet'
+    Other = 'other'
+
+
 class ParkingSecurityEnum(str, Enum):
     """Specifies security measures related to the parking site or particular spaces."""
     SocialControl = 'socialControl'
@@ -201,6 +210,12 @@ class CountryEnum(str, Enum):
     OTHER = 'other'  # Other than as defined in this enumeration.
 
 
+def validate_interUrbanParkingSiteLocationEnum(interUrbanParkingSiteLocation) -> bool:
+    if interUrbanParkingSiteLocation not in InterUrbanParkingSiteLocationEnum:
+        raise ValueError(f'Invalid interUrbanParkingSiteLocation: {interUrbanParkingSiteLocation}')
+    return True
+
+
 def validate_parkingSecurityEnum(parkingSecurity) -> bool:
     if parkingSecurity not in ParkingSecurityEnum:
         raise ValueError(f'Invalid parkingSecurity: {parkingSecurity}')
@@ -247,6 +262,159 @@ def validate_loadTypeEnum(loadType) -> bool:
     if loadType not in LoadTypeEnum:
         raise ValueError(f'Invalid loadType: {loadType}')
     return True
+
+
+mapping_interUrbanParkingSiteLocation = {
+    "motorway": InterUrbanParkingSiteLocationEnum.Motorway,
+    "nearbyMotorway": InterUrbanParkingSiteLocationEnum.NearbyMotorway,
+    "layBy": InterUrbanParkingSiteLocationEnum.LayBy,
+    "onStreet": InterUrbanParkingSiteLocationEnum.OnStreet,
+    "other": InterUrbanParkingSiteLocationEnum.Other
+}
+
+
+mapping_parkingSecurity = {
+    "socialControl": ParkingSecurityEnum.SocialControl,
+    "securityStaff": ParkingSecurityEnum.SecurityStaff,
+    "externalSecurity": ParkingSecurityEnum.ExternalSecurity,
+    "cctv": ParkingSecurityEnum.CCTV,
+    "dog": ParkingSecurityEnum.Dog,
+    "guard24hours": ParkingSecurityEnum.Guard24Hours,
+    "lighting": ParkingSecurityEnum.Lighting,
+    "floodLight": ParkingSecurityEnum.FloodLight,
+    "fences": ParkingSecurityEnum.Fences,
+    "areaSeperatedFromSurroundings": ParkingSecurityEnum.AreaSeperatedFromSurroundings,
+    "none": ParkingSecurityEnum.None_,
+    "unknown": ParkingSecurityEnum.Unknown,
+    "other": ParkingSecurityEnum.Other
+}
+
+mapping_labelSecurityLevel = {
+    "none": LabelSecurityLevelEnum.None_,
+    "securityLevel1": LabelSecurityLevelEnum.SecurityLevel1,
+    "securityLevel2": LabelSecurityLevelEnum.SecurityLevel2,
+    "securityLevel3": LabelSecurityLevelEnum.SecurityLevel3,
+    "securityLevel4": LabelSecurityLevelEnum.SecurityLevel4,
+    "securityLevel5": LabelSecurityLevelEnum.SecurityLevel5,
+    "unknown": LabelSecurityLevelEnum.Unknown
+}
+
+mapping_LabelServiceLevel = {
+    "none": ServiceLevelEnum.None_,
+    "serviceLevel1": ServiceLevelEnum.ServiceLevel1,
+    "serviceLevel2": ServiceLevelEnum.ServiceLevel2,
+    "serviceLevel3": ServiceLevelEnum.ServiceLevel3,
+    "serviceLevel4": ServiceLevelEnum.ServiceLevel4,
+    "serviceLevel5": ServiceLevelEnum.ServiceLevel5,
+    "unknown": ServiceLevelEnum.Unknown
+}
+
+
+mapping_serviceFacilityType = {
+    "Hotel": ServiceFacilityTypeEnum.Hotel,
+    "Motel": ServiceFacilityTypeEnum.Motel,
+    "Overnight accommodation": ServiceFacilityTypeEnum.OvernightAccommodation,
+    "Shop": ServiceFacilityTypeEnum.Shop,
+    "Kiosk": ServiceFacilityTypeEnum.Kiosk,
+    "Food shopping": ServiceFacilityTypeEnum.FoodShopping,
+    "Cafe": ServiceFacilityTypeEnum.Cafe,
+    "Restaurant": ServiceFacilityTypeEnum.Restaurant,
+    "Restaurant self service": ServiceFacilityTypeEnum.RestaurantSelfService,
+    "Motorway restaurant": ServiceFacilityTypeEnum.MotorwayRestaurant,
+    "Motorway restaurant small": ServiceFacilityTypeEnum.MotorwayRestaurantSmall,
+    "Spare parts shopping": ServiceFacilityTypeEnum.SparePartsShopping,
+    "Petrol station": ServiceFacilityTypeEnum.PetrolStation,
+    "Vehicle maintenance": ServiceFacilityTypeEnum.VehicleMaintenance,
+    "Tyre repair": ServiceFacilityTypeEnum.TyreRepair,
+    "Truck repair": ServiceFacilityTypeEnum.TruckRepair,
+    "Truck wash": ServiceFacilityTypeEnum.TruckWash,
+    "Car wash": ServiceFacilityTypeEnum.CarWash,
+    "Pharmacy": ServiceFacilityTypeEnum.Pharmacy,
+    "Medical facility": ServiceFacilityTypeEnum.MedicalFacility,
+    "Police": ServiceFacilityTypeEnum.Police,
+    "Tourist information": ServiceFacilityTypeEnum.TouristInformation,
+    "Bike sharing": ServiceFacilityTypeEnum.BikeSharing,
+    "Docstop": ServiceFacilityTypeEnum.Docstop,
+    "Laundry": ServiceFacilityTypeEnum.Laundry,
+    "Leisure activities": ServiceFacilityTypeEnum.LeisureActivities,
+    "Unknown": ServiceFacilityTypeEnum.Unknown,
+    "Other": ServiceFacilityTypeEnum.Other
+}
+
+mapping_vehicleType = {
+    "Agricultural vehicle": VehicleTypeEnum.AgriculturalVehicle,
+    "Any vehicle": VehicleTypeEnum.AnyVehicle,
+    "Articulated vehicle": VehicleTypeEnum.ArticulatedVehicle,
+    "Bicycle": VehicleTypeEnum.Bicycle,
+    "Bus": VehicleTypeEnum.Bus,
+    "Car": VehicleTypeEnum.Car,
+    "Caravan": VehicleTypeEnum.Caravan,
+    "Car or light vehicle": VehicleTypeEnum.CarOrLightVehicle,
+    "Car with caravan": VehicleTypeEnum.CarWithCaravan,
+    "Car with trailer": VehicleTypeEnum.CarWithTrailer,
+    "Construction or maintenance vehicle": VehicleTypeEnum.ConstructionOrMaintenanceVehicle,
+    "Four wheel drive": VehicleTypeEnum.FourWheelDrive,
+    "High sided vehicle": VehicleTypeEnum.HighSidedVehicle,
+    "Lorry": VehicleTypeEnum.Lorry,
+    "Moped": VehicleTypeEnum.Moped,
+    "Motorcycle": VehicleTypeEnum.Motorcycle,
+    "Motorcycle with side car": VehicleTypeEnum.MotorcycleWithSideCar,
+    "Motorscooter": VehicleTypeEnum.Motorscooter,
+    "Tanker": VehicleTypeEnum.Tanker,
+    "Three wheeled vehicle": VehicleTypeEnum.ThreeWheeledVehicle,
+    "Trailer": VehicleTypeEnum.Trailer,
+    "Tram": VehicleTypeEnum.Tram,
+    "Two wheeled vehicle": VehicleTypeEnum.TwoWheeledVehicle,
+    "Van": VehicleTypeEnum.Van,
+    "Vehicle with catalytic converter": VehicleTypeEnum.VehicleWithCatalyticConverter,
+    "Vehicle without catalytic converter": VehicleTypeEnum.VehicleWithoutCatalyticConverter,
+    "Vehicle with caravan": VehicleTypeEnum.VehicleWithCaravan,
+    "Vehicle with trailer": VehicleTypeEnum.VehicleWithTrailer,
+    "With even numbered registration plates": VehicleTypeEnum.WithEvenNumberedRegistrationPlates,
+    "With odd numbered registration plates": VehicleTypeEnum.WithOddNumberedRegistrationPlates,
+    "Other": VehicleTypeEnum.Other
+}
+
+mapping_loadType = {
+    "Animals": LoadTypeEnum.Animals,
+    "Asbestos": LoadTypeEnum.Asbestos,
+    "Beverages": LoadTypeEnum.Beverages,
+    "Building materials": LoadTypeEnum.BuildingMaterials,
+    "Chemicals": LoadTypeEnum.Chemicals,
+    "Combustible materials": LoadTypeEnum.CombustibleMaterials,
+    "Corrosive materials": LoadTypeEnum.CorrosiveMaterials,
+    "Debris": LoadTypeEnum.Debris,
+    "Empty": LoadTypeEnum.Empty,
+    "Explosive materials": LoadTypeEnum.ExplosiveMaterials,
+    "Extra high load": LoadTypeEnum.ExtraHighLoad,
+    "Extra long load": LoadTypeEnum.ExtraLongLoad,
+    "Extra wide load": LoadTypeEnum.ExtraWideLoad,
+    "Fuel": LoadTypeEnum.Fuel,
+    "Glass": LoadTypeEnum.Glass,
+    "Goods": LoadTypeEnum.Goods,
+    "Hazardous materials": LoadTypeEnum.HazardousMaterials,
+    "Liquid": LoadTypeEnum.Liquid,
+    "Livestock": LoadTypeEnum.Livestock,
+    "Materials": LoadTypeEnum.Materials,
+    "Materials dangerous for people": LoadTypeEnum.MaterialsDangerousForPeople,
+    "Materials dangerous for the environment": LoadTypeEnum.MaterialsDangerousForTheEnvironment,
+    "Materials dangerous for water": LoadTypeEnum.MaterialsDangerousForWater,
+    "Oil": LoadTypeEnum.Oil,
+    "Ordinary": LoadTypeEnum.Ordinary,
+    "Perishable products": LoadTypeEnum.PerishableProducts,
+    "Petrol": LoadTypeEnum.Petrol,
+    "Pharmaceutical materials": LoadTypeEnum.PharmaceuticalMaterials,
+    "Radioactive materials": LoadTypeEnum.RadioactiveMaterials,
+    "Refuse": LoadTypeEnum.Refuse,
+    "Toxic materials": LoadTypeEnum.ToxicMaterials,
+    "Vehicles": LoadTypeEnum.Vehicles,
+    "Other": LoadTypeEnum.Other
+}
+
+mapping_accessCategory = {
+    "vehicle entrance and exit": AccessCategoryEnum.VehicleEntranceAndExit,
+    "vehicle entrance": AccessCategoryEnum.VehicleEntrance
+}
 
 
 class GeneratedClass(abc.ABC):
@@ -619,150 +787,6 @@ class ParkingNumberOfSpaces(BaseGeneratedClass):
         self._name = 'parkingNumberOfSpaces'
 
 
-mapping_parkingSecurity = {
-    "socialControl": ParkingSecurityEnum.SocialControl,
-    "securityStaff": ParkingSecurityEnum.SecurityStaff,
-    "externalSecurity": ParkingSecurityEnum.ExternalSecurity,
-    "cctv": ParkingSecurityEnum.CCTV,
-    "dog": ParkingSecurityEnum.Dog,
-    "guard24hours": ParkingSecurityEnum.Guard24Hours,
-    "lighting": ParkingSecurityEnum.Lighting,
-    "floodLight": ParkingSecurityEnum.FloodLight,
-    "fences": ParkingSecurityEnum.Fences,
-    "areaSeperatedFromSurroundings": ParkingSecurityEnum.AreaSeperatedFromSurroundings,
-    "none": ParkingSecurityEnum.None_,
-    "unknown": ParkingSecurityEnum.Unknown,
-    "other": ParkingSecurityEnum.Other
-}
-
-mapping_labelSecurityLevel = {
-    "none": LabelSecurityLevelEnum.None_,
-    "securityLevel1": LabelSecurityLevelEnum.SecurityLevel1,
-    "securityLevel2": LabelSecurityLevelEnum.SecurityLevel2,
-    "securityLevel3": LabelSecurityLevelEnum.SecurityLevel3,
-    "securityLevel4": LabelSecurityLevelEnum.SecurityLevel4,
-    "securityLevel5": LabelSecurityLevelEnum.SecurityLevel5,
-    "unknown": LabelSecurityLevelEnum.Unknown
-}
-
-mapping_LabelServiceLevel = {
-    "none": ServiceLevelEnum.None_,
-    "serviceLevel1": ServiceLevelEnum.ServiceLevel1,
-    "serviceLevel2": ServiceLevelEnum.ServiceLevel2,
-    "serviceLevel3": ServiceLevelEnum.ServiceLevel3,
-    "serviceLevel4": ServiceLevelEnum.ServiceLevel4,
-    "serviceLevel5": ServiceLevelEnum.ServiceLevel5,
-    "unknown": ServiceLevelEnum.Unknown
-}
-
-
-mapping_serviceFacilityType = {
-    "Hotel": ServiceFacilityTypeEnum.Hotel,
-    "Motel": ServiceFacilityTypeEnum.Motel,
-    "Overnight accommodation": ServiceFacilityTypeEnum.OvernightAccommodation,
-    "Shop": ServiceFacilityTypeEnum.Shop,
-    "Kiosk": ServiceFacilityTypeEnum.Kiosk,
-    "Food shopping": ServiceFacilityTypeEnum.FoodShopping,
-    "Cafe": ServiceFacilityTypeEnum.Cafe,
-    "Restaurant": ServiceFacilityTypeEnum.Restaurant,
-    "Restaurant self service": ServiceFacilityTypeEnum.RestaurantSelfService,
-    "Motorway restaurant": ServiceFacilityTypeEnum.MotorwayRestaurant,
-    "Motorway restaurant small": ServiceFacilityTypeEnum.MotorwayRestaurantSmall,
-    "Spare parts shopping": ServiceFacilityTypeEnum.SparePartsShopping,
-    "Petrol station": ServiceFacilityTypeEnum.PetrolStation,
-    "Vehicle maintenance": ServiceFacilityTypeEnum.VehicleMaintenance,
-    "Tyre repair": ServiceFacilityTypeEnum.TyreRepair,
-    "Truck repair": ServiceFacilityTypeEnum.TruckRepair,
-    "Truck wash": ServiceFacilityTypeEnum.TruckWash,
-    "Car wash": ServiceFacilityTypeEnum.CarWash,
-    "Pharmacy": ServiceFacilityTypeEnum.Pharmacy,
-    "Medical facility": ServiceFacilityTypeEnum.MedicalFacility,
-    "Police": ServiceFacilityTypeEnum.Police,
-    "Tourist information": ServiceFacilityTypeEnum.TouristInformation,
-    "Bike sharing": ServiceFacilityTypeEnum.BikeSharing,
-    "Docstop": ServiceFacilityTypeEnum.Docstop,
-    "Laundry": ServiceFacilityTypeEnum.Laundry,
-    "Leisure activities": ServiceFacilityTypeEnum.LeisureActivities,
-    "Unknown": ServiceFacilityTypeEnum.Unknown,
-    "Other": ServiceFacilityTypeEnum.Other
-}
-
-mapping_vehicleType = {
-    "Agricultural vehicle": VehicleTypeEnum.AgriculturalVehicle,
-    "Any vehicle": VehicleTypeEnum.AnyVehicle,
-    "Articulated vehicle": VehicleTypeEnum.ArticulatedVehicle,
-    "Bicycle": VehicleTypeEnum.Bicycle,
-    "Bus": VehicleTypeEnum.Bus,
-    "Car": VehicleTypeEnum.Car,
-    "Caravan": VehicleTypeEnum.Caravan,
-    "Car or light vehicle": VehicleTypeEnum.CarOrLightVehicle,
-    "Car with caravan": VehicleTypeEnum.CarWithCaravan,
-    "Car with trailer": VehicleTypeEnum.CarWithTrailer,
-    "Construction or maintenance vehicle": VehicleTypeEnum.ConstructionOrMaintenanceVehicle,
-    "Four wheel drive": VehicleTypeEnum.FourWheelDrive,
-    "High sided vehicle": VehicleTypeEnum.HighSidedVehicle,
-    "Lorry": VehicleTypeEnum.Lorry,
-    "Moped": VehicleTypeEnum.Moped,
-    "Motorcycle": VehicleTypeEnum.Motorcycle,
-    "Motorcycle with side car": VehicleTypeEnum.MotorcycleWithSideCar,
-    "Motorscooter": VehicleTypeEnum.Motorscooter,
-    "Tanker": VehicleTypeEnum.Tanker,
-    "Three wheeled vehicle": VehicleTypeEnum.ThreeWheeledVehicle,
-    "Trailer": VehicleTypeEnum.Trailer,
-    "Tram": VehicleTypeEnum.Tram,
-    "Two wheeled vehicle": VehicleTypeEnum.TwoWheeledVehicle,
-    "Van": VehicleTypeEnum.Van,
-    "Vehicle with catalytic converter": VehicleTypeEnum.VehicleWithCatalyticConverter,
-    "Vehicle without catalytic converter": VehicleTypeEnum.VehicleWithoutCatalyticConverter,
-    "Vehicle with caravan": VehicleTypeEnum.VehicleWithCaravan,
-    "Vehicle with trailer": VehicleTypeEnum.VehicleWithTrailer,
-    "With even numbered registration plates": VehicleTypeEnum.WithEvenNumberedRegistrationPlates,
-    "With odd numbered registration plates": VehicleTypeEnum.WithOddNumberedRegistrationPlates,
-    "Other": VehicleTypeEnum.Other
-}
-
-mapping_loadType = {
-    "Animals": LoadTypeEnum.Animals,
-    "Asbestos": LoadTypeEnum.Asbestos,
-    "Beverages": LoadTypeEnum.Beverages,
-    "Building materials": LoadTypeEnum.BuildingMaterials,
-    "Chemicals": LoadTypeEnum.Chemicals,
-    "Combustible materials": LoadTypeEnum.CombustibleMaterials,
-    "Corrosive materials": LoadTypeEnum.CorrosiveMaterials,
-    "Debris": LoadTypeEnum.Debris,
-    "Empty": LoadTypeEnum.Empty,
-    "Explosive materials": LoadTypeEnum.ExplosiveMaterials,
-    "Extra high load": LoadTypeEnum.ExtraHighLoad,
-    "Extra long load": LoadTypeEnum.ExtraLongLoad,
-    "Extra wide load": LoadTypeEnum.ExtraWideLoad,
-    "Fuel": LoadTypeEnum.Fuel,
-    "Glass": LoadTypeEnum.Glass,
-    "Goods": LoadTypeEnum.Goods,
-    "Hazardous materials": LoadTypeEnum.HazardousMaterials,
-    "Liquid": LoadTypeEnum.Liquid,
-    "Livestock": LoadTypeEnum.Livestock,
-    "Materials": LoadTypeEnum.Materials,
-    "Materials dangerous for people": LoadTypeEnum.MaterialsDangerousForPeople,
-    "Materials dangerous for the environment": LoadTypeEnum.MaterialsDangerousForTheEnvironment,
-    "Materials dangerous for water": LoadTypeEnum.MaterialsDangerousForWater,
-    "Oil": LoadTypeEnum.Oil,
-    "Ordinary": LoadTypeEnum.Ordinary,
-    "Perishable products": LoadTypeEnum.PerishableProducts,
-    "Petrol": LoadTypeEnum.Petrol,
-    "Pharmaceutical materials": LoadTypeEnum.PharmaceuticalMaterials,
-    "Radioactive materials": LoadTypeEnum.RadioactiveMaterials,
-    "Refuse": LoadTypeEnum.Refuse,
-    "Toxic materials": LoadTypeEnum.ToxicMaterials,
-    "Vehicles": LoadTypeEnum.Vehicles,
-    "Other": LoadTypeEnum.Other
-}
-
-mapping_accessCategory = {
-    "vehicle entrance and exit": AccessCategoryEnum.VehicleEntranceAndExit,
-    "vehicle entrance": AccessCategoryEnum.VehicleEntrance
-}
-
-
 class ServiceFacilityType(BaseGeneratedClass):
     """ServiceFacilityType -- The type of service facility or equipment available at the parking site."""
 
@@ -882,6 +906,8 @@ class ParkingSecurity(BaseGeneratedClass):
     """ParkingSecurity -- The security level of the parking site."""
 
     def __init__(self, content: str):
+        if content is None or content == []:
+            content = 'unknown'
         mapped_content = mapping_parkingSecurity[content]
         validate_parkingSecurityEnum(mapped_content)
         super().__init__(mapped_content.value)
@@ -892,6 +918,8 @@ class LabelServiceLevel(BaseGeneratedClass):
     """LabelServiceLevel -- The service level of the parking site."""
 
     def __init__(self, content: str):
+        if content is None:
+            content = 'unknown'
         mapped_content = mapping_LabelServiceLevel[content]
         validate_ServiceLevelEnum(mapped_content)
         super().__init__(mapped_content.value)
@@ -902,6 +930,8 @@ class LabelSecurityLevel(BaseGeneratedClass):
     """LabelSecurityLevel -- The security level of the parking site."""
 
     def __init__(self, content: str):
+        if content is None:
+            content = 'unknown'
         mapped_content = mapping_labelSecurityLevel[content]
         validate_labelSecurityLevelEnum(mapped_content)
         super().__init__(mapped_content.value)
@@ -930,6 +960,18 @@ class ParkingAccess(GeneratedClassWithChildren):
         self._attributes = {'id': id}
 
 
+class InterUrbanParkingSiteLocation(BaseGeneratedClass):
+    """InterUrbanParkingSiteLocation -- The location of an inter-urban parking site."""
+
+    def __init__(self, content: str):
+        if content is None:
+            content = 'other'
+        mapped_content = mapping_interUrbanParkingSiteLocation[content]
+        validate_interUrbanParkingSiteLocationEnum(mapped_content)
+        super().__init__(mapped_content.value)
+        self._name = 'interUrbanParkingSiteLocation'
+
+
 class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
     """A container for static parking information. Must be specialised as a parking site or as a group of parking sites."""
 
@@ -940,11 +982,12 @@ class ParkingRecord(GeneratedClassWithChildren, abc.ABC):
                  assignedParkingAmongOthers: AssignedParkingAmongOthers=None, tariffsAndPayment: TariffsAndPayment=None,
                  parkingEquipmentOrServiceFacility: ParkingEquipmentOrServiceFacilityList=None,
                  groupOfParkingSpaces: GroupOfParkingSpacesList=None, parkingSiteAddress: ParkingsSiteAddress=None,
-                 parkingAccess: ParkingAccess=None, parkingStandardsAndSecurity: ParkingStandardsAndSecurity=None):
+                 parkingAccess: ParkingAccess=None, parkingStandardsAndSecurity: ParkingStandardsAndSecurity=None,
+                 interUrbanParkingSiteLocation: InterUrbanParkingSiteLocation=None):
         super().__init__((parkingName, parkingRecordVersionTime, parkingNumberOfSpaces, operator, parkingLocation,
                           onlyAssignedParking, assignedParkingAmongOthers, tariffsAndPayment,
                           parkingEquipmentOrServiceFacility, groupOfParkingSpaces, parkingSiteAddress, parkingAccess,
-                          parkingStandardsAndSecurity))
+                          parkingStandardsAndSecurity, interUrbanParkingSiteLocation))
         self._name = 'parkingRecord'
         self._attributes = {'{http://www.w3.org/2001/XMLSchema-instance}type': type_, 'id': id, 'version': version}
 
