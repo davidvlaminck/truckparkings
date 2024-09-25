@@ -23,7 +23,7 @@ def convert_json_to_xml(json_path: Path, xml_path: Path):
 
 
 def read_json(json_path: Path) -> dict:
-    with open(json_path, 'r') as f:
+    with open(json_path, encoding='utf-8') as f:
         return json.load(f)
 
 

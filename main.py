@@ -14,7 +14,7 @@ if __name__ == '__main__':
     convert_json_to_xml(json_path=input_path, xml_path=output_path)
 
     try:
-        xmlschema.validate("generated_20240722", "DATEXIISchema_2_2_3.xsd")
+        xmlschema.validate("generated_20240722.xml", "DATEXIISchema_2_2_3.xsd")
         print('valid XML')
     except Exception as ex:
         print(ex)
